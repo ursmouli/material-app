@@ -15,9 +15,7 @@
         </mat-sidenav>
 
         <mat-sidenav-content>
-            @for (content of fillerContent; track content) {
-            <p>{{content}}</p>
-            }
+            <router-outlet></router-outlet>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>
