@@ -6,9 +6,11 @@ import { UserHomeComponent } from './user-home/user-home.component';
 import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
     { path: 'welcome', component: WelcomeComponent },
+    { path: 'login', component: LoginComponent },
     {
         path: 'user', 
         component: UserHomeComponent, 
