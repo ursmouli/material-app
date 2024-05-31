@@ -1,18 +1,24 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 
 @Component({
   selector: 'app-side-navigation',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
+  imports: [CommonModule, 
+    RouterOutlet, RouterLink, RouterLinkActive, 
+    MatMenuModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule,
+    ProfileMenuComponent
+  ],
   templateUrl: './side-navigation.component.html',
   styleUrl: './side-navigation.component.scss'
 })
@@ -30,6 +36,8 @@ export class SideNavigationComponent {
   );
 
   private _mobileQueryListener: () => void;
+
+  @ViewChild(ProfileMenuComponent) profileMenu!: ProfileMenuComponent;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
