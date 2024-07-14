@@ -1,15 +1,20 @@
 import { Input, Component, Output, EventEmitter } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatCardModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
+  imports: [
+    RouterOutlet, RouterLink, RouterLinkActive,
+    MatCardModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatDividerModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

@@ -7,9 +7,13 @@ import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
+import { TestComponentsComponent } from './test-components/test-components.component';
 
 export const routes: Routes = [
+    { path: 'test', component: TestComponentsComponent },
     { path: 'welcome', component: WelcomeComponent },
+    { path: 'signup', component: SignupComponent },
     { path: 'login', component: LoginComponent },
     {
         path: 'user', 
