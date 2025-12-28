@@ -2,17 +2,26 @@
     display: flex;
     justify-content: center;
     margin: 100px 0px;
+    align-items: center;
 }
 
-.mat-form-field {
-    width: 100%;
-    min-width: 300px;
+mat-card {
+  max-width: 400px; /* Optional: limit card width for better UX */
+  width: 100%;
 }
 
 mat-card-title,
 mat-card-content {
     display: flex;
     justify-content: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+form {
+    width: 100%; /* Ensure form fits the content area */
 }
 
 .error {
