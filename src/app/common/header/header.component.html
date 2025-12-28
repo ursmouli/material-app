@@ -1,0 +1,55 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <div class="header-content">
+    <div class="brand">
+      <button mat-icon-button (click)="toggleSidenav.emit()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="logo-text">PRO-APP</span>
+    </div>
+
+    <div class="nav-links">
+      <button mat-button routerLink="/dashboard">Dashboard</button>
+      <button mat-button [matMenuTriggerFor]="productsMenu">
+        Products <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+    </div>
+
+    <span class="spacer"></span>
+    <div class="user-actions" *ngIf="authService.isLoggedIn">
+      <button mat-icon-button>
+        <mat-icon matBadge="3" matBadgeColor="accent">notifications</mat-icon>
+      </button>
+      
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        <span class="username">John Doe</span>
+      </button>
+    </div>
+    <div class="auth-links" *ngIf="!authService.isLoggedIn">
+      <button mat-button routerLink="/login">Login</button>
+      <button mat-button routerLink="/signup">Signup</button>
+    </div>
+  </div>
+</mat-toolbar>
+
+<mat-menu #productsMenu="matMenu">
+  <button mat-menu-item>Software Solutions</button>
+  <button mat-menu-item>Hardware</button>
+  <button mat-menu-item>Consulting</button>
+</mat-menu>
+
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>person</mat-icon>
+    <span>My Profile</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon>settings</mat-icon>
+    <span>Settings</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item class="logout-btn">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>

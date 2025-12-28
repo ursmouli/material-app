@@ -10,15 +10,16 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
+import { HeaderComponent } from "../common/header/header.component";
+import { FooterComponent } from '../common/footer/footer.component';
 
 @Component({
   selector: 'app-side-navigation',
   standalone: true,
-  imports: [CommonModule, 
-    RouterOutlet, RouterLink, RouterLinkActive, 
+  imports: [CommonModule,
+    RouterOutlet, RouterLink, RouterLinkActive,
     MatMenuModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule,
-    ProfileMenuComponent
-  ],
+    ProfileMenuComponent, HeaderComponent, HeaderComponent, FooterComponent],
   templateUrl: './side-navigation.component.html',
   styleUrl: './side-navigation.component.scss'
 })
@@ -49,5 +50,5 @@ export class SideNavigationComponent {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
+  // shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }

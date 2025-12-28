@@ -1,9 +1,46 @@
-<p>welcome works!</p>
+<app-header></app-header>
 
-<nav>
+<div class="welcome-container">
+  <header class="school-header">
+    <div class="logo-section">
+      <img src="https://picsum.photos/150/150?random=logo" alt="School Logo" class="school-logo" />
+      <div class="school-info">
+        <h1 class="school-name">Excellence Academy</h1>
+        <p class="school-tagline">Where Dreams Take Flight</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="welcome-text">
+    <h2>Welcome to Our School</h2>
+    <p>Discover a nurturing environment where students thrive academically, socially, and personally. Our dedicated faculty and modern facilities create the perfect setting for learning and growth.</p>
+    <p>Join our community and embark on a journey of excellence and innovation.</p>
+  </div>
+
+  <div class="carousel-container">
+    <div class="carousel">
+      <img [src]="images[currentIndex].src" [alt]="images[currentIndex].alt" class="carousel-image" />
+
+      <button class="carousel-btn prev-btn" (click)="prevSlide()">&#10094;</button>
+      <button class="carousel-btn next-btn" (click)="nextSlide()">&#10095;</button>
+
+      <div class="indicators">
+        <span
+          *ngFor="let image of images; let i = index"
+          [class.active]="i === currentIndex"
+          (click)="goToSlide(i)"
+          class="indicator"></span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="welcome-nav">
     <ul>
-        <li><a routerLink="/login">Go to login</a></li>
-        <li><a routerLink="/user">Go to user</a></li>
-        <li><a routerLink="/admin">Go to admin</a></li>
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/user">User Dashboard</a></li>
+      <li><a routerLink="/admin">Admin Panel</a></li>
     </ul>
-</nav>
+  </nav>
+</div>
+
+<app-footer></app-footer>

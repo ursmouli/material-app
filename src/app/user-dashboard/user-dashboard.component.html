@@ -1,1 +1,32 @@
-<p>user-dashboard works!</p>
+<div class="dashboard-container">
+  <h1>User Dashboard</h1>
+
+  <div class="widgets">
+    <mat-card class="widget-card">
+      <mat-card-header>
+        <mat-card-title>User Home</mat-card-title>
+        <mat-card-subtitle>Access user-specific features</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Navigate to the user home page.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/user">Go to User Home</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="widget-card">
+      <mat-card-header>
+        <mat-card-title>Admin Panel</mat-card-title>
+        <mat-card-subtitle>Access administrative features</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Navigate to the admin dashboard.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent" routerLink="/admin">Go to Admin Panel</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+

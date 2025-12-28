@@ -3,11 +3,12 @@ import { Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDivider } from "@angular/material/divider";
 
 @Component({
   selector: 'app-profile-menu',
   standalone: true,
-  imports: [MatMenuModule, MatIconModule, MatButtonModule],
+  imports: [MatMenuModule, MatIconModule, MatButtonModule, MatDivider],
   templateUrl: './profile-menu.component.html',
   styleUrl: './profile-menu.component.scss'
 })
