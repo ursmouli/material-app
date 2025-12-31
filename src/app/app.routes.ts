@@ -9,12 +9,14 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { TestComponentsComponent } from './test-components/test-components.component';
+import { EmployeeRegistrationComponent } from './employee-registration/employee-registration.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponentsComponent },
     { path: 'welcome', component: WelcomeComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'login', component: LoginComponent },
+    { path: 'employee-registration', component: EmployeeRegistrationComponent },
     {
         path: 'user', 
         component: UserHomeComponent, 

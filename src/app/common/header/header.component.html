@@ -1,34 +1,46 @@
 <mat-toolbar color="primary" class="app-toolbar">
   <div class="header-content">
     <div class="brand">
+      @if (isAdminOrUserRoute()) {
       <button mat-icon-button (click)="toggleSidenav.emit()">
         <mat-icon>menu</mat-icon>
       </button>
+      }
       <span class="logo-text">PRO-APP</span>
     </div>
 
     <div class="nav-links">
-      <button mat-button routerLink="/dashboard">Dashboard</button>
+      <button mat-button routerLink="/welcome">Welcome</button>
+      <button mat-button routerLink="/academics">Academics</button>
+      <button mat-button routerLink="/admissions">Admissions</button>
+      <button mat-button routerLink="/gallery">Gallery</button>
+      <button mat-button routerLink="/about">About</button>
       <button mat-button [matMenuTriggerFor]="productsMenu">
-        Products <mat-icon>arrow_drop_down</mat-icon>
+        Products <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
       </button>
+      
     </div>
 
     <span class="spacer"></span>
-    <div class="user-actions" *ngIf="authService.isLoggedIn">
+    @if (authService.isLoggedIn) {
+    <div class="user-actions">
       <button mat-icon-button>
         <mat-icon matBadge="3" matBadgeColor="accent">notifications</mat-icon>
       </button>
       
       <button mat-button [matMenuTriggerFor]="userMenu">
         <mat-icon>account_circle</mat-icon>
-        <span class="username">John Doe</span>
+        <span class="username">{{ authService.currentUser?.name }}</span>
       </button>
     </div>
-    <div class="auth-links" *ngIf="!authService.isLoggedIn">
+    }
+
+    @if (!authService.isLoggedIn) {
+    <div class="auth-links">
       <button mat-button routerLink="/login">Login</button>
       <button mat-button routerLink="/signup">Signup</button>
     </div>
+    }
   </div>
 </mat-toolbar>
 

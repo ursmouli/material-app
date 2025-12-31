@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-
-export interface User {
-  id: number;
-  email: string;
-  token: string;
-  role: 'admin' | 'user' | 'teacher' | 'student';
-}
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -28,19 +22,18 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(email: string, password: string, userRole: 'admin' | 'user' | 'teacher' | 'student') {
-    // Dummy authentication logic
-    const mockUser: User = {
-      id: 1,
-      email: email,
-      token: 'dummy-jwt-token',
-      role: userRole,
-    };
+  login(user: User) {
 
-    localStorage.setItem('school_user', JSON.stringify(mockUser));
+    localStorage.setItem('school_user', JSON.stringify(user));
 
-    this.currentUserSubject.next(mockUser);
-    this.router.navigate(['/dashboard']);
+    this.currentUserSubject.next(user);
+    if (user.role === 'admin') {
+      this.router.navigate(['/admin']);
+    } else if (user.role === 'user') {
+      this.router.navigate(['/user']);
+    } else {
+      this.router.navigate(['/welcome']);
+    }
   }
 
   logout(): void {
