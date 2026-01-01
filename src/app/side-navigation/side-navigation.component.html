@@ -43,7 +43,19 @@
                     <a mat-list-item routerLink="/admin/assign-subject">Assign Subjects</a>
                 </mat-nav-list>
             </mat-expansion-panel>
-            <a mat-list-item routerLink="/departments">Students</a>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Students
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a mat-list-item routerLink="/admin/students">All Students</a>
+                    <a mat-list-item routerLink="/admin/add-student">Add New</a>
+                    <a mat-list-item routerLink="/admin/proomte-students">Promote Students</a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -54,6 +66,17 @@
                     <a mat-list-item routerLink="/admin/employee-list">Employee List</a>
                     <a mat-list-item routerLink="/admin/employee-registration">Add Employee</a>
                     <a mat-list-item routerLink="/reports/annual">Job Letters</a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Attendance
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a mat-list-item routerLink="/attendance/mark-attendance">Mark Attendance</a>
+                    <a mat-list-item routerLink="/attendance/view-attendance">View Attendance</a>
                 </mat-nav-list>
             </mat-expansion-panel>
         </mat-nav-list>
