@@ -10,6 +10,12 @@
 //   height: ;
 // }
 
+.mat-sidenav {
+  width: 250px;
+  position: fixed;
+  padding-top: 56px;
+}
+
 .mat-sidenav-content {
   display: flex;
   flex-direction: column;
@@ -22,6 +28,11 @@
   min-height: calc(100vh - var(--footer-height));
 }
 
+.list-item-content {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Adjust this value for more or less space */
+}
 
 .app-is-mobile {
     position: fixed;

@@ -1,0 +1,100 @@
+<div class="assign-subjects-container">
+  <h2>Assign Subjects to Classes</h2>
+
+  <!-- Class Selection -->
+  <mat-form-field appearance="outline" class="class-select-field">
+    <mat-label>Select Class</mat-label>
+    <mat-select [(ngModel)]="selectedClassId" (selectionChange)="onClassChange()">
+      <mat-option *ngFor="let class of classes" [value]="class.id">
+        {{ class.name }} (Grade {{ class.grade }} - {{ class.academicYear }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Assignment Interface -->
+  <div *ngIf="selectedClass" class="assignment-section">
+    <div class="assignment-header">
+      <h3>Assigning subjects to: {{ selectedClass.name }}</h3>
+    </div>
+
+    <div class="assignment-content">
+      <!-- Available Subjects -->
+      <mat-card class="subjects-card">
+        <mat-card-header>
+          <mat-card-title>Available Subjects</mat-card-title>
+          <mat-card-subtitle>Click to assign to class</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <mat-list class="subjects-list">
+            <mat-list-item *ngFor="let subject of availableSubjects" class="subject-item">
+                <span matListItemTitle>{{ subject.name }}</span>
+                <span matListItemLine>{{ subject.code }} • {{ subject.credits }} credits • {{ subject.department }}</span>
+                <button mat-icon-button matListItemMeta color="primary" (click)="assignSubject(subject)" class="assign-btn">
+                  <mat-icon>add</mat-icon>
+                </button>
+            </mat-list-item>
+          </mat-list>
+
+          <div *ngIf="availableSubjects.length === 0" class="empty-state">
+            <p>All subjects have been assigned to this class.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Assigned Subjects -->
+      <mat-card class="subjects-card">
+        <mat-card-header>
+          <mat-card-title>Assigned Subjects</mat-card-title>
+          <mat-card-subtitle>Currently assigned to this class</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="assigned-subjects-chips">
+            <mat-chip-listbox>
+              <mat-chip *ngFor="let subject of getAssignedSubjects()"
+                       [removable]="true"
+                       (removed)="removeSubject(subject)"
+                       class="assigned-chip">
+                {{ subject.name }} ({{ subject.code }})
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+            </mat-chip-listbox>
+          </div>
+
+          <div *ngIf="getAssignedSubjects().length === 0" class="empty-state">
+            <p>No subjects assigned to this class yet.</p>
+          </div>
+
+          <!-- Detailed List View -->
+          <mat-list *ngIf="getAssignedSubjects().length > 0" class="assigned-list">
+            <mat-list-item *ngFor="let subject of getAssignedSubjects()" class="assigned-item">
+              <div class="subject-info">
+                <div class="subject-name">{{ subject.name }}</div>
+                <div class="subject-details">{{ subject.code }} • {{ subject.credits }} credits • {{ subject.department }}</div>
+                <div class="subject-description">{{ subject.description }}</div>
+              </div>
+              <button mat-icon-button color="warn" (click)="removeSubject(subject)" class="remove-btn">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- No Class Selected Message -->
+  <div *ngIf="!selectedClass" class="no-selection">
+    <mat-card class="info-card">
+      <mat-card-content>
+        <div class="info-content">
+          <mat-icon class="info-icon">info</mat-icon>
+          <p>Please select a class from the dropdown above to assign subjects.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

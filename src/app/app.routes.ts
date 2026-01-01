@@ -10,13 +10,17 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { TestComponentsComponent } from './test-components/test-components.component';
 import { EmployeeRegistrationComponent } from './employee-registration/employee-registration.component';
+import { EmployeeListComponent } from './employee-list/employee-list.component';
+import { NewClassComponent } from './new-class/new-class.component';
+import { ClassesComponent } from './classes/classes.component';
+import { SubjectsComponent } from './subjects/subjects.component';
+import { AssignSubjectsComponent } from './assign-subjects/assign-subjects.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponentsComponent },
     { path: 'welcome', component: WelcomeComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'login', component: LoginComponent },
-    { path: 'employee-registration', component: EmployeeRegistrationComponent },
     {
         path: 'user', 
         component: UserHomeComponent, 
@@ -28,7 +32,13 @@ export const routes: Routes = [
         path: 'admin', 
         component: AdminHomeComponent,
         children: [
-            { path: '', component: AdminDashboardComponent }
+            { path: '', component: AdminDashboardComponent },
+            { path: 'subjects', component: SubjectsComponent },
+            { path: 'assign-subject', component: AssignSubjectsComponent },
+            { path: 'classes', component: ClassesComponent },
+            { path: 'new-class', component: NewClassComponent },
+            { path: 'employee-registration', component: EmployeeRegistrationComponent },
+            { path: 'employee-list', component: EmployeeListComponent }
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },

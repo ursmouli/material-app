@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
@@ -18,8 +19,8 @@ import { FooterComponent } from '../common/footer/footer.component';
   standalone: true,
   imports: [CommonModule,
     RouterOutlet, RouterLink, RouterLinkActive,
-    MatMenuModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule,
-    ProfileMenuComponent, HeaderComponent, HeaderComponent, FooterComponent],
+    MatMenuModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, MatExpansionModule,
+    ProfileMenuComponent, HeaderComponent, FooterComponent],
   templateUrl: './side-navigation.component.html',
   styleUrl: './side-navigation.component.scss'
 })
