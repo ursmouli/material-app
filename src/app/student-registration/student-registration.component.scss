@@ -1,0 +1,38 @@
+mat-card {
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+$border-color: #ccc;
+$text-primary: #333;
+$spacing-base: 8px;
+
+.form-section {
+  border: 2px solid $border-color;
+  border-radius: 4px;
+  padding: $spacing-base * 3; // 24px
+  margin: ($spacing-base * 2) 0; // 16px
+
+  legend {
+    padding: 0 $spacing-base;
+    font-size: 16px;
+    font-weight: 500;
+    color: $text-primary;
+  }
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+
+  &.full-width mat-form-field {
+    flex: none;
+    width: 100%;
+  }
+}

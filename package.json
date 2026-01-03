@@ -27,6 +27,7 @@
     "luxon": "^3.4.4",
     "material-app": "file:",
     "ngx-material-timepicker": "^13.1.1",
+    "ngx-webcam": "^0.4.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

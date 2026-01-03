@@ -15,6 +15,7 @@ import { NewClassComponent } from './new-class/new-class.component';
 import { ClassesComponent } from './classes/classes.component';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { AssignSubjectsComponent } from './assign-subjects/assign-subjects.component';
+import { StudentRegistrationComponent } from './student-registration/student-registration.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponentsComponent },
@@ -38,7 +39,8 @@ export const routes: Routes = [
             { path: 'classes', component: ClassesComponent },
             { path: 'new-class', component: NewClassComponent },
             { path: 'employee-registration', component: EmployeeRegistrationComponent },
-            { path: 'employee-list', component: EmployeeListComponent }
+            { path: 'employee-list', component: EmployeeListComponent },
+            { path: 'add-student', component: StudentRegistrationComponent }
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },
