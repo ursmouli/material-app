@@ -17,10 +17,20 @@ import { FooterComponent } from '../common/footer/footer.component';
 @Component({
   selector: 'app-side-navigation',
   standalone: true,
-  imports: [CommonModule,
-    RouterOutlet, RouterLink, RouterLinkActive,
-    MatMenuModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, MatExpansionModule,
-    ProfileMenuComponent, HeaderComponent, FooterComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet, RouterLink, 
+    RouterLinkActive,
+    MatMenuModule, 
+    MatToolbarModule, 
+    MatButtonModule, 
+    MatIconModule, 
+    MatSidenavModule, 
+    MatListModule, 
+    MatExpansionModule,
+    ProfileMenuComponent, 
+    HeaderComponent, 
+    FooterComponent],
   templateUrl: './side-navigation.component.html',
   styleUrl: './side-navigation.component.scss'
 })

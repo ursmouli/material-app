@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RolesService } from '../common/services/roles.service';
 import { CommonModule } from '@angular/common';
+import { Role } from '../common/model/role';
 
 @Component({
   selector: 'app-employee-registration',
@@ -33,7 +34,7 @@ export class EmployeeRegistrationComponent implements OnInit {
   fb = inject(FormBuilder);
 
   employeeForm!: FormGroup;
-  roles: string[] = [];
+  roles: Role[] = [];
 
   ngOnInit() {
     this.rolesService.getRoles().then(roles => this.roles = roles);

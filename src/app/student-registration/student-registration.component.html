@@ -19,17 +19,30 @@
 						<mat-label>First Name</mat-label>
 						<input matInput formControlName="firstName" required>
 					</mat-form-field>
+					<mat-form-field appearance="outline">
+						<mat-label>Middle Name</mat-label>
+						<input matInput formControlName="middleName">
+					</mat-form-field>
 
 					<mat-form-field appearance="outline">
 						<mat-label>Last Name</mat-label>
 						<input matInput formControlName="lastName" required>
 					</mat-form-field>
-
+				</div>
+				<div class="form-row">
+					<mat-button-toggle-group formControlName="gender" aria-label="Gender" class="gender-toggle">
+						<mat-button-toggle value="male">Male</mat-button-toggle>
+						<mat-button-toggle value="female">Female</mat-button-toggle>
+					</mat-button-toggle-group>
 					<mat-form-field appearance="outline">
 						<mat-label>Date of Birth</mat-label>
 						<input matInput [matDatepicker]="picker" formControlName="dob" required>
 						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 						<mat-datepicker #picker></mat-datepicker>
+					</mat-form-field>
+					<mat-form-field appearance="outline">
+						<mat-label>Blood group</mat-label>
+						<input matInput formControlName="bloodGroup" required>
 					</mat-form-field>
 				</div>
 			</fieldset>
@@ -86,6 +99,7 @@
 				</div>
 			</fieldset>
 
+			<!-- Residential Address -->
 			<fieldset class="form-section">
 				<legend>Residential Address</legend>
 				<div formGroupName="residentialAddress">
@@ -94,17 +108,16 @@
 							<mat-label>House Number</mat-label>
 							<input matInput formControlName="houseNumber">
 						</mat-form-field>
-
 						<mat-form-field appearance="outline">
 							<mat-label>Plot Number</mat-label>
 							<input matInput formControlName="plotNumber">
 						</mat-form-field>
-
 						<mat-form-field appearance="outline">
 							<mat-label>Land Mark</mat-label>
 							<input matInput formControlName="landMark">
 						</mat-form-field>
-
+					</div>
+					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-label>Address Line 1</mat-label>
 							<input matInput formControlName="addressLine1" required>
@@ -114,7 +127,8 @@
 							<mat-label>Address Line 2</mat-label>
 							<input matInput formControlName="addressLine2">
 						</mat-form-field>
-
+					</div>
+					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-label>Taluk</mat-label>
 							<input matInput formControlName="taluk" required>

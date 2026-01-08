@@ -1,0 +1,82 @@
+<h2>Location Management</h2>
+
+<button mat-raised-button color="primary" (click)="addLocation()">
+  <mat-icon>add</mat-icon>
+  Add Location
+</button>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- Country Column -->
+  <ng-container matColumnDef="country">
+    <th mat-header-cell *matHeaderCellDef> Country </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <mat-form-field *ngIf="editingIndex === i" appearance="outline" style="width: 100px;">
+        <mat-select [(ngModel)]="element.country">
+          <mat-option *ngFor="let country of countries" [value]="country">{{country}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span *ngIf="editingIndex !== i">{{element.country}}</span>
+    </td>
+  </ng-container>
+
+  <!-- State Column -->
+  <ng-container matColumnDef="state">
+    <th mat-header-cell *matHeaderCellDef> State </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <mat-form-field *ngIf="editingIndex === i" appearance="outline" style="width: 100px;">
+        <mat-select [(ngModel)]="element.state">
+          <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span *ngIf="editingIndex !== i">{{element.state}}</span>
+    </td>
+  </ng-container>
+
+  <!-- District Column -->
+  <ng-container matColumnDef="district">
+    <th mat-header-cell *matHeaderCellDef> District </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <mat-form-field *ngIf="editingIndex === i" appearance="outline" style="width: 100px;">
+        <input matInput [(ngModel)]="element.district">
+      </mat-form-field>
+      <span *ngIf="editingIndex !== i">{{element.district}}</span>
+    </td>
+  </ng-container>
+
+  <!-- Taluk Column -->
+  <ng-container matColumnDef="taluk">
+    <th mat-header-cell *matHeaderCellDef> Taluk </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <mat-form-field *ngIf="editingIndex === i" appearance="outline" style="width: 100px;">
+        <input matInput [(ngModel)]="element.taluk">
+      </mat-form-field>
+      <span *ngIf="editingIndex !== i">{{element.taluk}}</span>
+    </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <div *ngIf="editingIndex !== i">
+        <button mat-icon-button (click)="editLocation(i)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteLocation(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="editingIndex === i">
+        <button mat-icon-button (click)="saveLocation(i)">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(i)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

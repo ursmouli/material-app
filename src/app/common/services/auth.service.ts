@@ -3,10 +3,14 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../model/user';
 
+import { environment } from '@env/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  private apiUrl = environment.apiUrl;
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();

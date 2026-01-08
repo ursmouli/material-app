@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CommonModule } from '@angular/common';
 import { WebcamModule } from 'ngx-webcam';
 import { MatCard, MatCardModule } from "@angular/material/card";
@@ -25,7 +26,8 @@ import { MatCard, MatCardModule } from "@angular/material/card";
     MatNativeDateModule,
     MatIconModule,
     WebcamModule,
-    MatCardModule
+    MatCardModule,
+    MatButtonToggleModule
 ],
   templateUrl: './student-registration.component.html',
   styleUrl: './student-registration.component.scss'
@@ -46,7 +48,10 @@ export class StudentRegistrationComponent {
     this.studentForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      middleName: [''],
       dob: ['', Validators.required],
+      gender: ['', Validators.required],
+      bloodGroup: [''],
       permanentAddress: this.createAddressFormGroup(),
       residentialAddress: this.createAddressFormGroup(),
       guardian: this.fb.group({
