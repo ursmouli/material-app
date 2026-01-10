@@ -43,6 +43,8 @@ export class LocationComponent {
   //   // Add more sample data as needed
   // ];
 
+  selectedLocationType: string = 'country';
+
   editingIndex: number | null = null;
   originalLocation: Location | null = null;
 
