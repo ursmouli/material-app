@@ -1,6 +1,6 @@
 export interface Taluk {
   id: number;
-  code: string;
+  code?: string;
   name: string;
-  districtId: number;
+  refId: number; // districtId
 }

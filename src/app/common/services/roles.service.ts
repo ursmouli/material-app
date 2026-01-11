@@ -1,7 +1,9 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 
 import { environment } from '@env/environment';
 import { Role } from "../model/role";
+import { HttpClient } from "@angular/common/http";
+import { firstValueFrom } from "rxjs";
 
 
 @Injectable({
@@ -12,21 +14,15 @@ export class RolesService {
     private roles: string[] = ['admin', 'user', 'guest'];
 
     private apiUrl = environment.apiUrl;
-    
-    getRoles(): Promise<Role[]> {
-        // return Promise.resolve(this.roles);
+    private http = inject(HttpClient);
 
-        return fetch(`${this.apiUrl}/roles`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => data.roles as Role[])
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-                return [];
-            });
+    async getRoles(): Promise<Role[]> {
+        try {
+            const response = await firstValueFrom(this.http.get<{ roles: Role[] }>(`${this.apiUrl}/roles`));
+            return response ? response.roles : [];
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            return [];
+        }
     }
 }

@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardActions, MatCardModule } from "@angular/material/card";
 import { Country } from '../common/model/country';
+import { LocationService } from '../common/services/location.service';
+import { State } from '../common/model/state';
+import { District } from '../common/model/district';
+import { Taluk } from '../common/model/taluk';
 
 export interface Location {
   country: string;
@@ -36,6 +40,7 @@ export interface Location {
   styleUrl: './location.component.scss'
 })
 export class LocationComponent {
+  private locationService = inject(LocationService);
   // displayedColumns: string[] = ['country', 'state', 'district', 'taluk', 'actions'];
   // dataSource: Location[] = [
   //   { country: 'India', state: 'Karnataka', district: 'Bangalore', taluk: 'Bangalore North' },
@@ -48,17 +53,56 @@ export class LocationComponent {
   editingIndex: number | null = null;
   originalLocation: Location | null = null;
 
-  // countries = ['India', 'USA', 'UK'];
-  countries: Country[] = [
-    { id: 1, code: 'IN', name: 'India' },
-    { id: 2, code: 'US', name: 'USA' },
-    { id: 3, code: 'UK', name: 'United Kingdom' }
-  ];
-  countriesDataSource = new MatTableDataSource<Country>(this.countries);
+  // data sources
+  countriesDataSource = new MatTableDataSource<Country>([]);
+  statesDataSource = new MatTableDataSource<State>([]);
+  districtsDataSource = new MatTableDataSource<District>([]);
+  taluksDataSource = new MatTableDataSource<Taluk>([]);
+
   displayedCountryColumns: string[] = ['id', 'code', 'name', "actions"];
 
   
   states = ['Karnataka', 'Tamil Nadu', 'Maharashtra', 'Delhi'];
+
+  country?: Country;
+  state?: State;
+  district?: District;
+  taluk?: Taluk;
+
+  onLocationTypeChange(event: MatSelectChange) {
+    this.selectedLocationType = event.value;
+    console.log('Selected Location Type:', this.selectedLocationType);
+
+    if (this.selectedLocationType == 'countries' 
+      || this.selectedLocationType == 'states' 
+      || this.selectedLocationType == 'districts'
+      || this.selectedLocationType == 'taluks') {
+      this.loadCountries();
+    }
+  }
+
+  async loadCountries() {
+    const data = await this.locationService.getCountries();
+    // console.log('Countries loaded:', data);
+    this.countriesDataSource.data = data;
+  }
+
+  async loadStates(countryId: number) {
+    const data = await this.locationService.getStates(countryId);
+    this.statesDataSource.data = data;
+  }
+
+  async loadDistricts(stateId: number) {
+    const data = await this.locationService.getDistricts(stateId);
+    this.districtsDataSource.data = data;
+  }
+
+  async loadTaluks(districtId: number) {
+    console.log('District ID:', districtId);
+    const data = await this.locationService.getTaluks(districtId);
+    console.log('Taluks loaded:', data);
+    this.taluksDataSource.data = data;
+  }
 
   addLocation() {
     const newLocation: Location = {
