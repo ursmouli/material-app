@@ -13,6 +13,8 @@ import { LocationService } from '../common/services/location.service';
 import { State } from '../common/model/state';
 import { District } from '../common/model/district';
 import { Taluk } from '../common/model/taluk';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AddLocationDialogComponent } from './add-location-dialog/add-location-dialog.component';
 
 export interface Location {
   country: string;
@@ -34,7 +36,8 @@ export interface Location {
     MatFormFieldModule, 
     FormsModule, 
     MatCardActions,
-    MatCardModule
+    MatCardModule,
+    MatDialogModule
   ],
   templateUrl: './location.component.html',
   styleUrl: './location.component.scss'
@@ -69,6 +72,25 @@ export class LocationComponent {
   district?: District;
   taluk?: Taluk;
 
+  readonly addDialog = inject(MatDialog);
+
+  openAddDialog(name: string, code: string) {
+    // Logic to open a dialog for adding a new location
+    const dialogRef = this.addDialog.open(AddLocationDialogComponent, {
+      width: '400px',
+      data: {
+        name: name,
+        code: code
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the result from the dialog (e.g., add the new location)
+        console.log('Dialog result:', result);
+      }
+    });
+  }
+
   onLocationTypeChange(event: MatSelectChange) {
     this.selectedLocationType = event.value;
     console.log('Selected Location Type:', this.selectedLocationType);
@@ -85,6 +107,11 @@ export class LocationComponent {
     const data = await this.locationService.getCountries();
     // console.log('Countries loaded:', data);
     this.countriesDataSource.data = data;
+  }
+
+  addCountry(country: Country) {
+    this.countriesDataSource.data.push(country);
+    this.countriesDataSource._updateChangeSubscription();
   }
 
   async loadStates(countryId: number) {
