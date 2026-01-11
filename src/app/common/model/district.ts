@@ -1,4 +1,4 @@
-export interface District {
+export interface District extends Location {
   id: number;
   code: string;
   name: string;

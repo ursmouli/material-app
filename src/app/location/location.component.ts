@@ -44,12 +44,6 @@ export interface Location {
 })
 export class LocationComponent {
   private locationService = inject(LocationService);
-  // displayedColumns: string[] = ['country', 'state', 'district', 'taluk', 'actions'];
-  // dataSource: Location[] = [
-  //   { country: 'India', state: 'Karnataka', district: 'Bangalore', taluk: 'Bangalore North' },
-  //   { country: 'India', state: 'Tamil Nadu', district: 'Chennai', taluk: 'T. Nagar' },
-  //   // Add more sample data as needed
-  // ];
 
   selectedLocationType: string = 'country';
 
@@ -74,13 +68,25 @@ export class LocationComponent {
 
   readonly addDialog = inject(MatDialog);
 
-  openAddDialog(name: string, code: string) {
+  openEditDialog(name?: string, code?: string) {
     // Logic to open a dialog for adding a new location
+    const currLocations: (Country | State | District | Taluk)[] = [];
+    if (this.selectedLocationType == 'countries') {
+      currLocations.push(...this.countriesDataSource.data);
+    } else if (this.selectedLocationType == 'states') {
+      currLocations.push(...this.statesDataSource.data);
+    } else if (this.selectedLocationType == 'districts') {
+      currLocations.push(...this.districtsDataSource.data);
+    } else if (this.selectedLocationType == 'taluks') {
+      currLocations.push(...this.taluksDataSource.data);
+    }
+
     const dialogRef = this.addDialog.open(AddLocationDialogComponent, {
       width: '400px',
       data: {
         name: name,
-        code: code
+        code: code,
+        locations: currLocations
       }
     });
     dialogRef.afterClosed().subscribe(result => {

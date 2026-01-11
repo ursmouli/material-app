@@ -1,18 +1,38 @@
 <h2 mat-dialog-title>Add New Location</h2>
 <mat-dialog-content>
-  <form #locationForm="ngForm">
+  <form [formGroup]="locationForm">
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Location Name</mat-label>
-      <input matInput name="locationName" [ngModel]="data.name" ngModel required />
+      <input matInput formControlName="name" required />
+
+      <mat-error *ngIf="locationForm.get('name')?.hasError('required')">
+        Name is required.
+      </mat-error>
+      <mat-error *ngIf="locationForm.get('name')?.hasError('minlength')">
+        Minimum 3 characters required.
+      </mat-error>
+      <mat-error *ngIf="locationForm.get('name')?.hasError('duplicateName')">
+        Name already exists.
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Location Code</mat-label>
-      <input matInput name="locationCode" [ngModel]="data.code" ngModel required />
+      <input matInput formControlName="code" required />
+      <mat-error *ngIf="locationForm.get('code')?.hasError('required')">
+        Code is required.
+      </mat-error>
+      <mat-error *ngIf="locationForm.get('code')?.hasError('minlength')">
+        Minimum 3 characters required.
+      </mat-error>
+      <mat-error *ngIf="locationForm.get('code')?.hasError('duplicateCode')">
+        Code already exists.
+      </mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="locationForm.value" [disabled]="!locationForm.valid">Add</button>
+  <button mat-button [mat-dialog-close]="locationForm.value" [disabled]="!locationForm.valid"
+    (click)="onSave()">Add</button>
 </mat-dialog-actions>
