@@ -24,6 +24,7 @@ import { Student } from '../common/model/student';
 import { PropertiesService } from '../common/services/properties.service';
 import { Relation } from '../common/model/relations';
 import { Address } from '../common/model/address';
+import { ageBeforeValidator } from '../common/validators/form-validators';
 
 @Component({
   selector: 'app-student-registration',
@@ -67,18 +68,20 @@ export class StudentRegistrationComponent implements OnInit {
   selectedCountry!: Country;
 
   studentForm: FormGroup;
+  cutoffDate = new Date();
 
   constructor(private fb: FormBuilder) {
+    this.cutoffDate.setFullYear(this.cutoffDate.getFullYear() - 6);
     this.studentForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       middleName: [''],
-      dob: ['', Validators.required],
+      dob: ['', [Validators.required, ageBeforeValidator(this.cutoffDate)]],
       gender: ['', Validators.required],
       bloodGroup: [''],
       permanentAddress: this.createAddressFormGroup(),
       residentialAddress: this.createAddressFormGroup(),
-      isResidentialSameAsPermanent: [''],
+      isResidentialSameAsPermanent: ['yes'],
       guardian: this.fb.group({
         relation: ['', Validators.required],
         name: ['', [Validators.required, Validators.minLength(3)]],
@@ -90,6 +93,8 @@ export class StudentRegistrationComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.resetResidentialAddress();
+    
     const relationships: string[] = await this.propertiesService.fetchRelationships();
     this.relationshipTypes$.next(relationships);
 
@@ -151,6 +156,31 @@ export class StudentRegistrationComponent implements OnInit {
         this.loadTaluk(districtId, false);
       }
     });
+
+    this.studentForm.get('isResidentialSameAsPermanent')?.valueChanges.subscribe(value => {
+      const resAddr = this.studentForm.get('residentialAddress');
+
+      if (value === 'yes') {
+        resAddr?.clearValidators();
+        resAddr?.reset();
+        resAddr?.disable();
+      } else {
+        // Re-apply validation and enable
+        resAddr?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+        resAddr?.enable();
+      }
+    });
+  }
+
+  resetResidentialAddress() {
+    const resAddr = this.studentForm.get('residentialAddress');
+    if (resAddr) {
+      resAddr.reset();
+      resAddr.disable();
+    }
   }
 
   async loadDistricts(stateId: number, isPermanenetAddress: boolean) {
@@ -225,25 +255,7 @@ export class StudentRegistrationComponent implements OnInit {
 
   onSubmit() {
     if (this.studentForm.valid) {
-      console.log(this.studentForm.value);
-      /*
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      middleName: [''],
-      dob: ['', Validators.required],
-      gender: ['', Validators.required],
-      bloodGroup: [''],
-      permanentAddress: this.createAddressFormGroup(),
-      residentialAddress: this.createAddressFormGroup(),
-      isResidentialSameAsPermanent: [''],
-      guardian: this.fb.group({
-        type: ['', Validators.required],
-        name: ['', [Validators.required, Validators.minLength(3)]],
-        phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-        email: ['', [Validators.required, Validators.email]]
-      }),
-      siblings: this.fb.array([])
-      */
+      // console.log(this.studentForm.value);
 
       const student: Student = {
         firstName: this.studentForm.get('firstName')?.value,
@@ -279,8 +291,6 @@ export class StudentRegistrationComponent implements OnInit {
       }
     ]
   }
-
-  private mapSiblings(siblings: any) {}
 
   private mapAddress(address: any): Address {
     return {

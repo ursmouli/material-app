@@ -45,6 +45,13 @@
 						<mat-hint>MM/DD/YYYY</mat-hint>
 						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 						<mat-datepicker #picker></mat-datepicker>
+
+						@if (studentForm.get('dob')?.hasError('required')) {
+							<mat-error>Date of birth is required</mat-error>
+						}
+						@if (studentForm.get('dob')?.errors?.['tooYoung']) {
+							<mat-error>You must be at least before {{ cutoffDate | date:'yyyy-MM-dd' }}</mat-error>
+						}
 					</mat-form-field>
 					<!-- Dropdown blood group -->
 					<mat-form-field appearance="outline">
@@ -109,16 +116,6 @@
 						</mat-form-field>
 					</div>
 					<div class="form-row">
-						<!-- <mat-form-field appearance="outline">
-							<mat-label>Country</mat-label>
-							<mat-select formControlName="country" required>
-								@if (countries$ | async; as countries) {
-									@for (country of countries; track country.id) {
-										<mat-option [value]="country.id">{{ country.name }}</mat-option>
-									}
-								}
-							</mat-select>
-						</mat-form-field> -->
 						<input type="hidden" formControlName="country">
 						<mat-form-field appearance="outline">
 							<mat-label>State</mat-label>
