@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../model/user';
 
 import { environment } from '@env/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,10 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private router: Router) {
+  router = inject(Router);
+  http = inject(HttpClient);
+
+  constructor() {
     const storedUser = localStorage.getItem('school_user');
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
@@ -26,18 +30,22 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(user: User) {
+  async login(user: User) {
 
-    localStorage.setItem('school_user', JSON.stringify(user));
+    const userInfo: User = await firstValueFrom(this.http.post<User>(`${this.apiUrl}/auth/login`, user));
 
-    this.currentUserSubject.next(user);
-    if (user.role === 'admin') {
-      this.router.navigate(['/admin']);
-    } else if (user.role === 'user') {
-      this.router.navigate(['/user']);
-    } else {
-      this.router.navigate(['/welcome']);
+    if (userInfo) {
+      this.currentUserSubject.next(userInfo);
+      if (userInfo.roles?.includes('admin')) {
+        this.router.navigate(['/admin']);
+      } else if (userInfo.roles?.includes('user')) {
+        this.router.navigate(['/user']);
+      } else {
+        this.router.navigate(['/welcome']);
+      }
     }
+
+    localStorage.setItem('school_user', JSON.stringify(userInfo));
   }
 
   logout(): void {
@@ -50,8 +58,8 @@ export class AuthService {
     return !!this.currentUserSubject.value;
   }
 
-  hasRole(role: string): boolean {
-    return this.currentUserSubject.value?.role === role;
+  hasRole(role: string): boolean | undefined {
+    return this.currentUserSubject.value?.roles?.includes(role);
   }
 
 

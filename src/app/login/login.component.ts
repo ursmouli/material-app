@@ -44,19 +44,13 @@ export class LoginComponent {
   });
 
   onSubmit() {
-    console.log(this.loginForm.value);
-    console.log(this.loginForm.valid);
+    // console.log(this.loginForm.value);
+    // console.log(this.loginForm.valid);
 
     if (this.loginForm.valid) {
-      // set role based on email for demo purpose
-      const role = this.loginForm.value.email.includes('admin') ? 'admin' : 'user';
-
       const user: User = {
-        id: 1,
-        name: role,
         email: this.loginForm.value.email,
-        token: 'dummy-jwt-token',
-        role: role
+        password: this.loginForm.value.password
       };
 
       this.authService.login(user);
