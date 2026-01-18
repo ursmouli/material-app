@@ -30,19 +30,44 @@
 					</mat-form-field>
 				</div>
 				<div class="form-row">
-					<mat-button-toggle-group formControlName="gender" aria-label="Gender" class="gender-toggle">
-						<mat-button-toggle value="male">Male</mat-button-toggle>
-						<mat-button-toggle value="female">Female</mat-button-toggle>
-					</mat-button-toggle-group>
+					<div class="radio-group">
+						<label>Gender</label>
+						<mat-radio-group formControlName="gender">
+							<mat-radio-button value="male">Male</mat-radio-button>
+							<mat-radio-button value="female">Female</mat-radio-button>
+						</mat-radio-group>
+					</div>
+				</div>
+				<div class="form-row">
 					<mat-form-field appearance="outline">
 						<mat-label>Date of Birth</mat-label>
 						<input matInput [matDatepicker]="picker" formControlName="dob" required>
+						<mat-hint>MM/DD/YYYY</mat-hint>
 						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 						<mat-datepicker #picker></mat-datepicker>
 					</mat-form-field>
+					<!-- Dropdown blood group -->
 					<mat-form-field appearance="outline">
-						<mat-label>Blood group</mat-label>
-						<input matInput formControlName="bloodGroup" required>
+						<mat-label>Blood Group</mat-label>
+						<mat-select formControlName="bloodGroup">
+							<mat-option value="A+">A+</mat-option>
+							<mat-option value="A-">A-</mat-option>
+							<mat-option value="B+">B+</mat-option>
+							<mat-option value="B-">B-</mat-option>
+							<mat-option value="AB+">AB+</mat-option>
+							<mat-option value="AB-">AB-</mat-option>
+							<mat-option value="O+">O+</mat-option>
+							<mat-option value="O-">O-</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-label>Is residential address same as permanent?</mat-label>
+						<mat-select formControlName="isResidentialSameAsPermanent">
+							<mat-option value="yes">Yes</mat-option>
+							<mat-option value="no">No</mat-option>
+						</mat-select>
 					</mat-form-field>
 				</div>
 			</fieldset>
@@ -58,8 +83,8 @@
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
-							<mat-label>Plot Number</mat-label>
-							<input matInput formControlName="plotNumber">
+							<mat-label>Street</mat-label>
+							<input matInput formControlName="street">
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
@@ -69,30 +94,60 @@
 					</div>
 					<div class="form-row">
 						<mat-form-field appearance="outline">
-							<mat-label>Street</mat-label>
+							<mat-label>Place City/Town/Village</mat-label>
+							<input matInput formControlName="place" required>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Postalcode</mat-label>
+							<input matInput formControlName="postalCode">
+						</mat-form-field>
+					</div>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<mat-label>Camp, Colony</mat-label>
 							<input matInput formControlName="addressLine1" required>
 						</mat-form-field>
 					</div>
 					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-label>Address Line 2</mat-label>
-							<input matInput formControlName="addressLine2">
-						</mat-form-field>
-					</div>
-					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-label>Taluk</mat-label>
-							<input matInput formControlName="taluk" required>
-						</mat-form-field>
-						<mat-form-field appearance="outline">
-							<mat-label>District</mat-label>
-							<input matInput formControlName="district" required>
-						</mat-form-field>
-
+						<!-- <mat-form-field appearance="outline">
+							<mat-label>Country</mat-label>
+							<mat-select formControlName="country" required>
+								@if (countries$ | async; as countries) {
+									@for (country of countries; track country.id) {
+										<mat-option [value]="country.id">{{ country.name }}</mat-option>
+									}
+								}
+							</mat-select>
+						</mat-form-field> -->
+						<input type="hidden" formControlName="country">
 						<mat-form-field appearance="outline">
 							<mat-label>State</mat-label>
 							<mat-select formControlName="state" required>
-								<mat-option *ngFor="let state of indianStates" [value]="state">{{state}}</mat-option>
+								@if (pIndianStates$ | async; as indianStates) {
+								@for (state of indianStates; track state.id) {
+								<mat-option [value]="state.id">{{ state.name }}</mat-option>
+								}
+								}
+							</mat-select>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>District</mat-label>
+							<mat-select formControlName="district" required>
+								@if (pStateDistricts$ | async; as districts) {
+								@for (district of districts; track district.id) {
+								<mat-option [value]="district.id">{{ district.name }}</mat-option>
+								}
+								}
+							</mat-select>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Taluk</mat-label>
+							<mat-select formControlName="taluk" required>
+								@if (pDistrictTaluks$ | async; as taluks) {
+								@for (taluk of taluks; track taluk.id) {
+								<mat-option [value]="taluk.id">{{ taluk.name }}</mat-option>
+								}
+								}
 							</mat-select>
 						</mat-form-field>
 					</div>
@@ -100,6 +155,8 @@
 			</fieldset>
 
 			<!-- Residential Address -->
+			@if (studentForm.get('isResidentialSameAsPermanent')?.touched &&
+			studentForm.get('isResidentialSameAsPermanent')?.value === 'no') {
 			<fieldset class="form-section">
 				<legend>Residential Address</legend>
 				<div formGroupName="residentialAddress">
@@ -109,8 +166,8 @@
 							<input matInput formControlName="houseNumber">
 						</mat-form-field>
 						<mat-form-field appearance="outline">
-							<mat-label>Plot Number</mat-label>
-							<input matInput formControlName="plotNumber">
+							<mat-label>Street</mat-label>
+							<input matInput formControlName="street">
 						</mat-form-field>
 						<mat-form-field appearance="outline">
 							<mat-label>Land Mark</mat-label>
@@ -119,35 +176,58 @@
 					</div>
 					<div class="form-row">
 						<mat-form-field appearance="outline">
-							<mat-label>Address Line 1</mat-label>
-							<input matInput formControlName="addressLine1" required>
+							<mat-label>Place City/Town/Village</mat-label>
+							<input matInput formControlName="place" required>
 						</mat-form-field>
-
 						<mat-form-field appearance="outline">
-							<mat-label>Address Line 2</mat-label>
-							<input matInput formControlName="addressLine2">
+							<mat-label>Postalcode</mat-label>
+							<input matInput formControlName="postalCode">
+						</mat-form-field>
+					</div>
+
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<mat-label>Camp, Colony</mat-label>
+							<input matInput formControlName="addressLine1" required>
 						</mat-form-field>
 					</div>
 					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-label>Taluk</mat-label>
-							<input matInput formControlName="taluk" required>
-						</mat-form-field>
-
-						<mat-form-field appearance="outline">
-							<mat-label>District</mat-label>
-							<input matInput formControlName="district" required>
-						</mat-form-field>
-
+						<input type="hidden" formControlName="country">
 						<mat-form-field appearance="outline">
 							<mat-label>State</mat-label>
 							<mat-select formControlName="state" required>
-								<mat-option *ngFor="let state of indianStates" [value]="state">{{state}}</mat-option>
+								@if (rIndianStates$ | async; as states) {
+								@for (state of states; track state.id) {
+								<mat-option [value]="state.id">{{ state.name }}</mat-option>
+								}
+								}
 							</mat-select>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>District</mat-label>
+							@if (rStateDistricts$ | async; as districts) {
+							<mat-select formControlName="district" required>
+								@for (district of districts; track district.id) {
+								<mat-option [value]="district.id">{{ district.name }}</mat-option>
+								}
+							</mat-select>
+							}
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<mat-label>Taluk</mat-label>
+							@if (rDistrictTaluks$ | async; as taluks) {
+							<mat-select formControlName="taluk" required>
+								@for (taluk of taluks; track taluk.id) {
+								<mat-option [value]="taluk.id">{{ taluk.name }}</mat-option>
+								}
+							</mat-select>
+							}
 						</mat-form-field>
 					</div>
 				</div>
 			</fieldset>
+			}
 
 			<fieldset class="form-section">
 				<legend>Guardian</legend>
@@ -155,16 +235,28 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-label>Guardian Type</mat-label>
-							<mat-select formControlName="type" required>
-								<mat-option value="mother">Mother</mat-option>
-								<mat-option value="father">Father</mat-option>
-								<mat-option value="uncle">Uncle</mat-option>
+							@if (relationshipTypes$ | async; as relations) {
+							<mat-select formControlName="relation" required>
+								@for (relation of relations; track relation) {
+								<mat-option [value]="relation">{{ relation }}</mat-option>
+								}
 							</mat-select>
+							}
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
 							<mat-label>Guardian Name</mat-label>
 							<input matInput formControlName="name" required>
+						</mat-form-field>
+					</div>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<mat-label>Guardian Phone</mat-label>
+							<input matInput formControlName="phone" required>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Guardian Email</mat-label>
+							<input matInput formControlName="email" required>
 						</mat-form-field>
 					</div>
 				</div>
@@ -175,33 +267,51 @@
 
 				<div formArrayName="siblings">
 					<div *ngFor="let sibling of siblings.controls; let i = index" [formGroupName]="i">
-						<div class="form-row">
-							<mat-form-field appearance="outline">
-								<mat-label>Type</mat-label>
-								<mat-select formControlName="type" required>
-									<mat-option value="brother">Brother</mat-option>
-									<mat-option value="sister">Sister</mat-option>
-								</mat-select>
-							</mat-form-field>
+						<fieldset class="form-section">
+							<legend>
+								Sibling {{ i + 1 }}
+								<button mat-icon-button type="button" (click)="removeSibling(i)">
+									<mat-icon>delete</mat-icon>
+								</button>
+							</legend>
+							<div class="form-row">
+								<mat-form-field appearance="outline">
+									<mat-label>Relation</mat-label>
+									@if (relationshipTypes$ | async; as relations) {
+									<mat-select formControlName="relation" required>
+										@for (relation of relations; track relation) {
+										<mat-option [value]="relation">{{ relation }}</mat-option>
+										}
+									</mat-select>
+									}
+								</mat-form-field>
 
-							<mat-form-field appearance="outline">
-								<mat-label>Name</mat-label>
-								<input matInput formControlName="name" required>
-							</mat-form-field>
+								<mat-form-field appearance="outline">
+									<mat-label>Name</mat-label>
+									<input matInput formControlName="name" required>
+								</mat-form-field>
 
-							<mat-form-field appearance="outline">
-								<mat-label>Previous School Name</mat-label>
-								<input matInput formControlName="previousSchoolName">
-							</mat-form-field>
+								<mat-form-field appearance="outline">
+									<mat-label>Date of Birth</mat-label>
+									<input matInput [matDatepicker]="siblingPicker" formControlName="dob" required>
+									<mat-hint>MM/DD/YYYY</mat-hint>
+									<mat-datepicker-toggle matSuffix [for]="siblingPicker"></mat-datepicker-toggle>
+									<mat-datepicker #siblingPicker></mat-datepicker>
+								</mat-form-field>
+							</div>
+							<div class="form-row">
+								<mat-form-field appearance="outline">
+									<mat-label>Institution Name</mat-label>
+									<input matInput formControlName="institutionName">
+								</mat-form-field>
 
-							<mat-form-field appearance="outline">
-								<mat-label>Place</mat-label>
-								<input matInput formControlName="place">
-							</mat-form-field>
-							<button mat-icon-button type="button" (click)="removeSibling(i)">
-								<mat-icon>delete</mat-icon>
-							</button>
-						</div>
+								<mat-form-field appearance="outline">
+									<mat-label>Institution Place</mat-label>
+									<input matInput formControlName="institutionPlace">
+								</mat-form-field>
+
+							</div>
+						</fieldset>
 					</div>
 				</div>
 

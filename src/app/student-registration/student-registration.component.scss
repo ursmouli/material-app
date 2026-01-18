@@ -3,6 +3,21 @@ mat-card {
   margin: 20px auto;
 }
 
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12); /* Matches Material outline */
+  border-radius: 4px;
+}
+
+mat-radio-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
 $border-color: #ccc;
 $text-primary: #333;
 $spacing-base: 8px;
