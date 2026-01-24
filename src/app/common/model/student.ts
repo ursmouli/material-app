@@ -14,6 +14,8 @@ export interface Student {
     sameAsPermanentAddress?: boolean;
     guardians: Guardian[];
     siblings?: Sibling[];
+    registrationDate?: Date;
+    registrationNumber?: string;
 }
 
 export interface Guardian {

@@ -25,6 +25,7 @@ import { PropertiesService } from '../common/services/properties.service';
 import { Relation } from '../common/model/relations';
 import { Address } from '../common/model/address';
 import { ageBeforeValidator } from '../common/validators/form-validators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-registration',
@@ -69,6 +70,8 @@ export class StudentRegistrationComponent implements OnInit {
 
   studentForm: FormGroup;
   cutoffDate = new Date();
+
+  router = inject(Router);
 
   constructor(private fb: FormBuilder) {
     this.cutoffDate.setFullYear(this.cutoffDate.getFullYear() - 6);
@@ -274,7 +277,8 @@ export class StudentRegistrationComponent implements OnInit {
       console.log(student);
 
       this.studentService.registerStudent(student).then((response) => {
-        console.log(response);
+        // redirect to student-list
+        this.router.navigate(['/student-list']);
       }).catch((error) => {
         console.error(error);
       });
