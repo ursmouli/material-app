@@ -1,0 +1,58 @@
+/* Container for the title and the close button */
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+/* Optional: If you want the X to float in the extreme corner */
+.close-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  color: #666;
+}
+
+/* Ensure the title doesn't overlap the button if it's long */
+[mat-dialog-title] {
+  margin: 0;
+  padding-right: 40px; 
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adds space between the fields */
+  width: 100%;
+  max-width: 500px; /* Optional: limits the width */
+}
+
+// ::ng-deep .mat-form-field-disabled {
+//   /* Text color */
+//   .mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control {
+//     -webkit-text-fill-color: black !important;
+//     color: black !important;
+//   }
+  
+//   /* Label color */
+//   .mat-mdc-floating-label {
+//     color: black !important;
+//   }
+// }
+
+// /* Targets the actual input text */
+// .mat-mdc-form-field.mat-form-field-disabled .mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control {
+//     -webkit-text-fill-color: black !important;
+//     color: black !important;
+// }
+
+// /* Targets the label text */
+// .mat-mdc-form-field.mat-form-field-disabled .mat-mdc-floating-label {
+//     color: black !important;
+// }
+
+// /* Targets the placeholder */
+// .mat-mdc-form-field.mat-form-field-disabled .mat-mdc-form-field-input-control::placeholder {
+//     color: rgba(0, 0, 0, 0.7);
+// }

@@ -1,0 +1,57 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>Student Information</h2>
+  <button mat-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <div class="form-container">
+    <mat-form-field appearance="outline">
+      <mat-label>First Name</mat-label>
+      <input matInput formControlName="firstName" [value]="data.student.firstName" [readonly]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Last Name</mat-label>
+      <input matInput formControlName="lastName" [value]="data.student.lastName" [readonly]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Registration Number</mat-label>
+      <input matInput formControlName="registrationNumber" [value]="data.student.registrationNumber"
+        [readonly]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Gender</mat-label>
+      <input matInput formControlName="gender" [value]="data.student.gender" [readonly]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="location" [value]="data.student.location" [readonly]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Phone Number</mat-label>
+      <input matInput formControlName="phoneNumber" [value]="data.student.phoneNumber" [readonly]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" [value]="data.student.email" [readonly]="true" />
+    </mat-form-field>
+
+    <!-- Address -->
+    <h3>Permanent Address</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="address" [value]="data.student.address" [readonly]="true" />
+    </mat-form-field>
+    <h3>Current Address</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="address" [value]="data.student.address" [readonly]="true" />
+    </mat-form-field>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

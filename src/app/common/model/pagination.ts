@@ -33,4 +33,5 @@ export interface Pagination {
     size: number;
     sortField: string;
     sortDirection: string;
+    searchTerm?: string;
 }

@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { StudentService } from '../common/services/student.service';
 import { Student } from '../common/model/student';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -9,6 +9,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PageResponse } from '../common/model/pagination';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { StudentDialogComponent } from './student-dialog/student-dialog.component';
 
 @Component({
   selector: 'app-student-list',
@@ -20,18 +24,15 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule
   ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss'
 })
-export class StudentListComponent {
+export class StudentListComponent implements OnInit {
 
   studentService = inject(StudentService);
-
-  // students$ = this.studentService.getStudents();
-
-  students: Student[] = [];
 
   // table variables
   studentsDataSource = new MatTableDataSource<Student>([]);
@@ -44,40 +45,51 @@ export class StudentListComponent {
   sortField = 'firstName';
   sortDirection = 'ASC';
 
+  searchSubject = new Subject<string>();
   searchTerm: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  dialog = inject(MatDialog);
   
 
-  constructor() {
-    this.studentService.getStudents({
-      page: this.pageIndex, 
-      size: this.pageSize, 
-      sortField: this.sortField, 
-      sortDirection: this.sortDirection
-    }).then((students: PageResponse<Student>) => {
-      console.log(students);
-      this.studentsDataSource.data = students.content;
-      this.paginator.length = students.totalElements;
-      this.totalElements = students.totalElements;
+  constructor() {}
+
+  ngOnInit(): void {
+    this.searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe((value : string | undefined) => {
+      // console.log(value);
+      this.searchTerm = value || '';
+      this.pageIndex = 0;
+      this.loadData();
     });
+
+    this.loadData();
+  }
+
+  onSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value);
   }
 
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.onSearch();
+    this.loadData();
   }
 
-  onSearch() {
+  loadData() {
+    // console.log(`Search term: ${this.searchTerm}`);
     this.studentService.getStudents({
       page: this.pageIndex, 
       size: this.pageSize, 
       sortField: this.sortField, 
-      sortDirection: this.sortDirection
+      sortDirection: this.sortDirection,
+      searchTerm: this.searchTerm
     }).then((students: PageResponse<Student>) => {
-      this.studentsDataSource.data = students.content;
-      this.paginator.length = students.totalElements;
+      this.studentsDataSource.data = [...students.content];
       this.totalElements = students.totalElements;
     });
   }
@@ -91,6 +103,16 @@ export class StudentListComponent {
   }
 
   viewStudent(student: Student) {
+    // open dialog to view all student details
+    const dialogRef = this.dialog.open(StudentDialogComponent, {
+      data: { student },
+      width: '600px',
+      height: 'auto',
+      maxWidth: '90vw'
+    });
+  }
+
+  onAddStudent() {
     
   }
 }
