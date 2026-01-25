@@ -39,9 +39,40 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender" required>
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+          <mat-error *ngIf="employeeForm.get('gender')?.invalid && employeeForm.get('gender')?.touched">
+            Gender is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Marital Status</mat-label>
+          <mat-select formControlName="maritalStatus" required>
+            <mat-option value="single">Single</mat-option>
+            <mat-option value="married">Married</mat-option>
+            <mat-option value="divorced">Divorced</mat-option>
+            <mat-option value="widowed">Widowed</mat-option>
+          </mat-select>
+          <mat-error *ngIf="employeeForm.get('maritalStatus')?.invalid && employeeForm.get('maritalStatus')?.touched">
+            Marital status is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
           <mat-label>Role</mat-label>
           <mat-select formControlName="role" required>
-            <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</mat-option>
+            @if (roles$ | async; as roles) {
+              @if (roles.length > 0) {
+                <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</mat-option>
+              } @else {
+                <mat-option value="">No roles available</mat-option>
+              }
+            }
           </mat-select>
           <mat-error *ngIf="employeeForm.get('role')?.invalid && employeeForm.get('role')?.touched">
             Role is required
@@ -49,54 +80,24 @@
         </mat-form-field>
       </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Permanent Address</mat-label>
-          <textarea matInput formControlName="permanentAddress" rows="3" required></textarea>
-          <mat-error *ngIf="employeeForm.get('permanentAddress')?.invalid && employeeForm.get('permanentAddress')?.touched">
-            Permanent address is required
-          </mat-error>
-        </mat-form-field>
-      </div>
+      <app-address-form 
+        [addressGroup]="permanentAddress" 
+        [addressType]="'permanent'" 
+        [title]="'Permanent Address'">
+      </app-address-form>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Residential Address</mat-label>
-          <textarea matInput formControlName="residentialAddress" rows="3" required></textarea>
-          <mat-error *ngIf="employeeForm.get('residentialAddress')?.invalid && employeeForm.get('residentialAddress')?.touched">
-            Residential address is required
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Father's Name</mat-label>
-          <input matInput formControlName="father">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Mother's Name</mat-label>
-          <input matInput formControlName="mother">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Spouse's Name</mat-label>
-          <input matInput formControlName="spouse">
-        </mat-form-field>
-      </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Number of Kids</mat-label>
-          <input matInput type="number" formControlName="kids">
-        </mat-form-field>
-      </div>
+      @if (employeeForm.get('isResidentialSameAsPermanent')?.value === 'no') {
+        <app-address-form 
+          [addressGroup]="residentialAddress" 
+          [addressType]="'residential'" 
+          [title]="'Residential Address'">
+        </app-address-form>
+      }
 
       <div class="form-row">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Previous Employment History</mat-label>
-          <textarea matInput formControlName="previousEmployment" rows="4"></textarea>
+          <textarea matInput formControlName="previousEmployment" rows="4" placeholder="Institutaion Name, Place"></textarea>
         </mat-form-field>
       </div>
 

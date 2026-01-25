@@ -6,7 +6,7 @@ import { State } from "../model/state";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { District } from "../model/district";
-
+import { Taluk } from "../model/taluk";
 
 @Injectable({
   providedIn: 'root'
@@ -49,9 +49,10 @@ export class LocationService {
     }
   }
 
-  async getTaluks(districtId: number): Promise<State[]> {
+  async getTaluks(districtId: number): Promise<Taluk[]> {
     try {
-      const data = await firstValueFrom(this.http.get<State[]>(`${this.apiUrl}/locations/districts/${districtId}/taluks`));
+      const data = await firstValueFrom(this.http.get<Taluk[]>(`${this.apiUrl}/locations/districts/${districtId}/taluks`));
+      // console.log('Fetched taluks data:', data);
       return data;
     } catch (error) {
       console.error('There was a problem with taluks the fetch operation:', error);

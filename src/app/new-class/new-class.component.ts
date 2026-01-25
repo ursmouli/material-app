@@ -100,7 +100,7 @@ export class NewClassComponent implements OnInit {
         }))
       };
 
-      console.log('New Class Created:', classData);
+      // console.log('New Class Created:', classData);
 
       // In a real app, you would send this to a service
       this.snackBar.open('Class created successfully!', 'Close', {

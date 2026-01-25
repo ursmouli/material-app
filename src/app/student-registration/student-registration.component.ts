@@ -274,7 +274,7 @@ export class StudentRegistrationComponent implements OnInit {
         siblings: this.studentForm.get('siblings')?.value
       };
 
-      console.log(student);
+      // console.log(student);
 
       this.studentService.registerStudent(student).then((response) => {
         // redirect to student-list

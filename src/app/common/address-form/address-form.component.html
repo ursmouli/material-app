@@ -1,0 +1,70 @@
+<fieldset class="form-section">
+  <legend>{{ title }}</legend>
+  <div [formGroup]="addressGroup">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>House Number</mat-label>
+        <input matInput formControlName="houseNumber">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Street</mat-label>
+        <input matInput formControlName="street">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Land Mark</mat-label>
+        <input matInput formControlName="landMark">
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Place City/Town/Village</mat-label>
+        <input matInput formControlName="place" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Postalcode</mat-label>
+        <input matInput formControlName="postalCode">
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Camp, Colony</mat-label>
+        <input matInput formControlName="addressLine1" required>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <input type="hidden" formControlName="country">
+      <mat-form-field appearance="outline">
+        <mat-label>State</mat-label>
+        <mat-select formControlName="state" required>
+          @if (indianStates$ | async; as indianStates) {
+          @for (state of indianStates; track state.id) {
+          <mat-option [value]="state.id">{{ state.name }}</mat-option>
+          }
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>District</mat-label>
+        <mat-select formControlName="district" required>
+          @if (stateDistricts$ | async; as districts) {
+          @for (district of districts; track district.id) {
+          <mat-option [value]="district.id">{{ district.name }}</mat-option>
+          }
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Taluk</mat-label>
+        <mat-select formControlName="taluk" required>
+          @if (districtTaluks$ | async; as taluks) {
+          @for (taluk of taluks; track taluk.id) {
+          <mat-option [value]="taluk.id">{{ taluk.name }}</mat-option>
+          }
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</fieldset>

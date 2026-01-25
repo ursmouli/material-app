@@ -40,7 +40,7 @@ export const routes: Routes = [
             { path: 'assign-subject', component: AssignSubjectsComponent },
             { path: 'classes', component: ClassesComponent },
             { path: 'new-class', component: NewClassComponent },
-            { path: 'employee-registration', component: EmployeeRegistrationComponent },
+            { path: 'add-employee', component: EmployeeRegistrationComponent },
             { path: 'employee-list', component: EmployeeListComponent },
             { path: 'add-student', component: StudentRegistrationComponent },
             { path: 'location', component: LocationComponent },

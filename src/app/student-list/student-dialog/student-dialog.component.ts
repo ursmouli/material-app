@@ -25,6 +25,6 @@ export class StudentDialogComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<StudentDialogComponent>);
 
   ngOnInit(): void {
-    console.log('Data received in dialog:', this.data);
+    // console.log('Data received in dialog:', this.data);
   }
 }

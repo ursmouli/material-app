@@ -131,9 +131,9 @@ export class LocationComponent {
   }
 
   async loadTaluks(districtId: number) {
-    console.log('District ID:', districtId);
+    // console.log('District ID:', districtId);
     const data = await this.locationService.getTaluks(districtId);
-    console.log('Taluks loaded:', data);
+    // console.log('Taluks loaded:', data);
     this.taluksDataSource.data = data;
   }
 

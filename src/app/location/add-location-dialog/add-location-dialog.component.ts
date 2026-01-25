@@ -36,7 +36,7 @@ export class AddLocationDialogComponent implements OnInit {
   existingNames = [];
 
   ngOnInit() {
-    console.log('Data received in dialog:', this.data);
+    // console.log('Data received in dialog:', this.data);
     if (this.data) {
       const currLocations = this.data['locations'] || [];
       this.existingCodes = currLocations
@@ -64,7 +64,7 @@ export class AddLocationDialogComponent implements OnInit {
   onSave() {
     // Pass back the data to the calling component
     if (this.locationForm.valid) {
-      console.log('Form Value:', this.locationForm.value);
+      // console.log('Form Value:', this.locationForm.value);
       this.dialogRef.close(this.locationForm.value);
     }
   }

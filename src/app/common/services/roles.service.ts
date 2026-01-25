@@ -11,15 +11,14 @@ import { firstValueFrom } from "rxjs";
 })
 export class RolesService {
 
-    private roles: string[] = ['admin', 'user', 'guest'];
-
     private apiUrl = environment.apiUrl;
     private http = inject(HttpClient);
 
     async getRoles(): Promise<Role[]> {
         try {
-            const response = await firstValueFrom(this.http.get<{ roles: Role[] }>(`${this.apiUrl}/roles`));
-            return response ? response.roles : [];
+            const response = await firstValueFrom(this.http.get<Role[]>(`${this.apiUrl}/roles`));
+            // console.log(response);
+            return response ? response : [];
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
             return [];
