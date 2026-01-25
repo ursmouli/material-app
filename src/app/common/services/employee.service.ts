@@ -16,7 +16,7 @@ export class EmployeeService {
 
     private apiUrl = environment.apiUrl;
 
-    registerEmployee(employee: Employee) {
+    registerEmployee(employee: Employee): Promise<Employee> {
         return firstValueFrom(this.http.post<Employee>(`${this.apiUrl}/employees/add`, employee));
     }
 

@@ -18,6 +18,7 @@ import { AssignSubjectsComponent } from './assign-subjects/assign-subjects.compo
 import { StudentRegistrationComponent } from './student-registration/student-registration.component';
 import { LocationComponent } from './location/location.component';
 import { StudentListComponent } from './student-list/student-list.component';
+import { DepartmentComponent } from './department/department.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponentsComponent },
@@ -45,6 +46,7 @@ export const routes: Routes = [
             { path: 'add-student', component: StudentRegistrationComponent },
             { path: 'location', component: LocationComponent },
             { path: 'student-list', component: StudentListComponent },
+            { path: 'departments', component: DepartmentComponent }
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },
