@@ -1,6 +1,45 @@
 <div class="department-container">
   <h2>Department Employees Management</h2>
 
+  <!-- Search and Filter Section -->
+  <div class="search-section">
+    <div class="search-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search by Employee</mat-label>
+        <input matInput
+               [(ngModel)]="searchTerm"
+               (input)="onSearch($event)"
+               placeholder="Search by employee name or ID">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Filter by Department</mat-label>
+        <mat-select [(ngModel)]="selectedDepartment" (selectionChange)="onDepartmentFilter($event.value)">
+          <mat-option value="">All Departments</mat-option>
+          <mat-option *ngFor="let dept of departments" [value]="dept">
+            {{ dept }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Filter by Role</mat-label>
+        <mat-select [(ngModel)]="selectedRole" (selectionChange)="onRoleFilter($event.value)">
+          <mat-option value="">All Roles</mat-option>
+          <mat-option *ngFor="let role of roles" [value]="role">
+            {{ role }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="accent" (click)="clearFilters()" class="clear-btn">
+        <mat-icon>clear</mat-icon>
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
   <!-- Add Employee Button -->
   <div class="action-bar">
     <button mat-raised-button color="primary" (click)="addNewEmployee()" [disabled]="editingRow !== null">
@@ -14,55 +53,47 @@
     <form [formGroup]="employeeForm">
       <table mat-table [dataSource]="employeeDataSource" class="employee-table">
 
-        <!-- Employee Number Column -->
-        <ng-container matColumnDef="employeeNumber">
-          <th mat-header-cell *matHeaderCellDef>Employee ID</th>
+        <!-- Department Column -->
+        <ng-container matColumnDef="department">
+          <th mat-header-cell *matHeaderCellDef>Department</th>
           <td mat-cell *matCellDef="let employee; let i = index">
-            <div *ngIf="!isEditingRow(i); else editEmployeeNumber">
-              {{ employee.employeeNumber }}
+            <div *ngIf="!isEditingRow(i); else editDepartment">
+              {{ employee.department || 'Not Assigned' }}
             </div>
-            <ng-template #editEmployeeNumber>
+            <ng-template #editDepartment>
               <mat-form-field appearance="outline" class="inline-form-field">
-                <mat-label>Employee ID</mat-label>
-                <input matInput 
-                       formControlName="employeeNumber"
-                       placeholder="Enter employee ID">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="department">
+                  <mat-option *ngFor="let dept of departments" [value]="dept">
+                    {{ dept }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </ng-template>
           </td>
         </ng-container>
 
-        <!-- First Name Column -->
-        <ng-container matColumnDef="firstName">
-          <th mat-header-cell *matHeaderCellDef>First Name</th>
+        <!-- Employee Column -->
+        <ng-container matColumnDef="employee">
+          <th mat-header-cell *matHeaderCellDef>Employee</th>
           <td mat-cell *matCellDef="let employee; let i = index">
-            <div *ngIf="!isEditingRow(i); else editFirstName">
-              {{ employee.firstName }}
+            <div *ngIf="!isEditingRow(i); else editEmployee">
+              {{ employee.firstName }} {{ employee.lastName }}
             </div>
-            <ng-template #editFirstName>
+            <ng-template #editEmployee>
               <mat-form-field appearance="outline" class="inline-form-field">
-                <mat-label>First Name</mat-label>
-                <input matInput 
-                       formControlName="firstName"
-                       placeholder="Enter first name">
-              </mat-form-field>
-            </ng-template>
-          </td>
-        </ng-container>
-
-        <!-- Last Name Column -->
-        <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef>Last Name</th>
-          <td mat-cell *matCellDef="let employee; let i = index">
-            <div *ngIf="!isEditingRow(i); else editLastName">
-              {{ employee.lastName }}
-            </div>
-            <ng-template #editLastName>
-              <mat-form-field appearance="outline" class="inline-form-field">
-                <mat-label>Last Name</mat-label>
-                <input matInput 
-                       formControlName="lastName"
-                       placeholder="Enter last name">
+                <mat-label>Select Employee</mat-label>
+                <input type="text"
+                       matInput
+                       formControlName="selectedEmployee"
+                       [matAutocomplete]="employeeAuto"
+                       (optionSelected)="onEmployeeSelectionChange($event)"
+                       placeholder="Search and select employee">
+                <mat-autocomplete #employeeAuto="matAutocomplete" [displayWith]="displayEmployeeFn">
+                  <mat-option *ngFor="let emp of filteredEmployees | async" [value]="emp">
+                    {{ emp.firstName }} {{ emp.lastName }} ({{ emp.employeeNumber }})
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
             </ng-template>
           </td>
@@ -118,6 +149,18 @@
             [class.editing-row]="isEditingRow(i)"></tr>
       </table>
     </form>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+      <mat-paginator 
+        [length]="totalElements"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
 
     <!-- No data message -->
     <div *ngIf="employeeDataSource.data.length === 0" class="no-data">

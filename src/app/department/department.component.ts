@@ -7,10 +7,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { EmployeeService } from '../common/services/employee.service';
 import { Employee } from '../common/model/registration';
+import { debounceTime, distinctUntilChanged, Subject, startWith, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-department',
@@ -24,6 +27,8 @@ import { Employee } from '../common/model/registration';
     MatButtonModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatPaginatorModule,
+    MatAutocompleteModule,
     FormsModule,
     ReactiveFormsModule
   ],
@@ -37,7 +42,16 @@ export class DepartmentComponent implements OnInit {
 
   // Table variables
   employeeDataSource = new MatTableDataSource<Employee>([]);
-  displayedColumns: string[] = ['employeeNumber', 'firstName', 'lastName', 'role', 'actions'];
+  displayedColumns: string[] = ['department', 'employee', 'role', 'actions'];
+
+  // Pagination variables
+  totalElements = 0;
+  pageIndex = 0;
+  pageSize = 10;
+  sortField = 'firstName';
+  sortDirection = 'ASC';
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   // Form for new employee
   employeeForm: FormGroup;
@@ -49,39 +63,56 @@ export class DepartmentComponent implements OnInit {
   // Sample data for demonstration
   departments = ['Engineering', 'HR', 'Finance', 'Marketing', 'Operations'];
   roles = ['Manager', 'Developer', 'Designer', 'Analyst', 'Administrator'];
+  availableEmployees: Employee[] = [];
+
+  // Search and filter variables
+  searchSubject = new Subject<string>();
+  searchTerm: string = '';
+  selectedDepartment: string = '';
+  selectedRole: string = '';
+  filteredEmployees: Observable<Employee[]>;
 
   constructor() {
     this.employeeForm = this.fb.group({
-      employeeNumber: [''],
-      firstName: [''],
-      lastName: [''],
+      selectedEmployee: [''],
+      department: [''],
       role: ['']
     });
+
+    // Setup autocomplete filtering
+    this.filteredEmployees = this.employeeForm.get('selectedEmployee')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterEmployees(value || ''))
+    );
   }
 
   ngOnInit() {
+    this.setupSearch();
     this.loadEmployees();
   }
 
   async loadEmployees() {
     try {
       const employees = await this.employeeService.getEmployees({
-        page: 0,
-        size: 50,
-        sortField: 'firstName',
-        sortDirection: 'ASC',
-        searchTerm: ''
+        page: this.pageIndex,
+        size: this.pageSize,
+        sortField: this.sortField,
+        sortDirection: this.sortDirection,
+        searchTerm: this.buildSearchTerm()
       });
       this.employeeDataSource.data = [...employees.content];
+      this.availableEmployees = [...employees.content];
+      this.totalElements = employees.totalElements;
     } catch (error) {
       console.error('Error loading employees:', error);
       // Fallback sample data
-      this.employeeDataSource.data = [
+      const sampleEmployees = [
         {
           id: 1,
           employeeNumber: 'EMP001',
           firstName: 'John',
           lastName: 'Doe',
+          department: 'Engineering',
           role: 'Developer',
           gender: 'Male',
           dob: new Date('1990-01-15'),
@@ -104,6 +135,7 @@ export class DepartmentComponent implements OnInit {
           employeeNumber: 'EMP002',
           firstName: 'Jane',
           lastName: 'Smith',
+          department: 'HR',
           role: 'Manager',
           gender: 'Female',
           dob: new Date('1985-05-20'),
@@ -120,8 +152,34 @@ export class DepartmentComponent implements OnInit {
             addressLine1: '456 Oak Ave'
           },
           guardians: []
+        },
+        {
+          id: 3,
+          employeeNumber: 'EMP003',
+          firstName: 'Mike',
+          lastName: 'Johnson',
+          department: 'Finance',
+          role: 'Designer',
+          gender: 'Male',
+          dob: new Date('1992-03-10'),
+          permanentAddress: {
+            houseNumber: '789',
+            street: 'Pine St',
+            landmark: 'Near Library',
+            place: 'Otherville',
+            stateId: '3',
+            postalCode: '54321',
+            countryId: '1',
+            districtId: '3',
+            talukId: '3',
+            addressLine1: '789 Pine St'
+          },
+          guardians: []
         }
       ];
+      this.employeeDataSource.data = this.filterEmployees(sampleEmployees);
+      this.availableEmployees = sampleEmployees;
+      this.totalElements = this.filterEmployees(sampleEmployees).length;
     }
   }
 
@@ -131,9 +189,8 @@ export class DepartmentComponent implements OnInit {
     
     // Populate form with employee data
     this.employeeForm.patchValue({
-      employeeNumber: employee.employeeNumber,
-      firstName: employee.firstName,
-      lastName: employee.lastName,
+      selectedEmployee: employee,
+      department: employee.department || '',
       role: employee.role
     });
   }
@@ -181,6 +238,7 @@ export class DepartmentComponent implements OnInit {
       employeeNumber: '',
       firstName: '',
       lastName: '',
+      department: '',
       role: '',
       gender: '',
       dob: new Date(),
@@ -208,15 +266,17 @@ export class DepartmentComponent implements OnInit {
       return;
     }
 
+    const selectedEmployee = this.employeeForm.value.selectedEmployee;
     const newEmployee: Employee = {
       id: Date.now(), // Temporary ID
-      employeeNumber: this.employeeForm.value.employeeNumber || `EMP${Date.now()}`,
-      firstName: this.employeeForm.value.firstName,
-      lastName: this.employeeForm.value.lastName,
-      role: this.employeeForm.value.role,
-      gender: '',
-      dob: new Date(),
-      permanentAddress: {
+      employeeNumber: selectedEmployee?.employeeNumber || `EMP${Date.now()}`,
+      firstName: selectedEmployee?.firstName || '',
+      lastName: selectedEmployee?.lastName || '',
+      department: this.employeeForm.value.department || selectedEmployee?.department || '',
+      role: this.employeeForm.value.role || selectedEmployee?.role || '',
+      gender: selectedEmployee?.gender || '',
+      dob: selectedEmployee?.dob || new Date(),
+      permanentAddress: selectedEmployee?.permanentAddress || {
         houseNumber: '',
         street: '',
         landmark: '',
@@ -228,7 +288,7 @@ export class DepartmentComponent implements OnInit {
         talukId: '',
         addressLine1: ''
       },
-      guardians: []
+      guardians: selectedEmployee?.guardians || []
     };
 
     try {
@@ -260,5 +320,101 @@ export class DepartmentComponent implements OnInit {
 
   isEditingRow(index: number): boolean {
     return this.editingRow === index;
+  }
+
+  onEmployeeSelectionChange(event: any) {
+    const selectedEmployee = event.option?.value;
+    if (selectedEmployee) {
+      this.employeeForm.patchValue({
+        department: selectedEmployee.department || '',
+        role: selectedEmployee.role
+      });
+    }
+  }
+
+  displayEmployeeFn(employee: Employee): string {
+    return employee ? `${employee.firstName} ${employee.lastName} (${employee.employeeNumber})` : '';
+  }
+
+  private _filterEmployees(value: string): Employee[] {
+    const filterValue = value.toLowerCase();
+    return this.availableEmployees.filter(employee => 
+      employee.firstName.toLowerCase().includes(filterValue) ||
+      employee.lastName.toLowerCase().includes(filterValue) ||
+      employee.employeeNumber?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadEmployees();
+  }
+
+  setupSearch() {
+    this.searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe((value: string | undefined) => {
+      this.searchTerm = value || '';
+      this.pageIndex = 0;
+      this.loadEmployees();
+    });
+  }
+
+  onSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value);
+  }
+
+  onDepartmentFilter(department: string) {
+    this.selectedDepartment = department;
+    this.pageIndex = 0;
+    this.loadEmployees();
+  }
+
+  onRoleFilter(role: string) {
+    this.selectedRole = role;
+    this.pageIndex = 0;
+    this.loadEmployees();
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.selectedDepartment = '';
+    this.selectedRole = '';
+    this.pageIndex = 0;
+    this.loadEmployees();
+  }
+
+  buildSearchTerm(): string {
+    const searchParts = [];
+    if (this.searchTerm) {
+      searchParts.push(this.searchTerm);
+    }
+    if (this.selectedDepartment) {
+      searchParts.push(`department:${this.selectedDepartment}`);
+    }
+    if (this.selectedRole) {
+      searchParts.push(`role:${this.selectedRole}`);
+    }
+    return searchParts.join(' ');
+  }
+
+  filterEmployees(employees: Employee[]): Employee[] {
+    return employees.filter(employee => {
+      const matchesSearch = !this.searchTerm || 
+        employee.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        employee.lastName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        employee.employeeNumber?.toLowerCase().includes(this.searchTerm.toLowerCase());
+      
+      const matchesDepartment = !this.selectedDepartment || 
+        employee.department === this.selectedDepartment;
+      
+      const matchesRole = !this.selectedRole || 
+        employee.role === this.selectedRole;
+      
+      return matchesSearch && matchesDepartment && matchesRole;
+    });
   }
 }

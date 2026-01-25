@@ -26,6 +26,7 @@ export interface Employee extends Registration {
   maritalStatus?: string;
   previousEmployment?: string;
   role?: string;
+  department?: string;
 }
 
 export interface Guardian {

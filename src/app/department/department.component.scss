@@ -10,6 +10,37 @@
   }
 }
 
+.search-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+
+  .search-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 200px;
+
+      .mat-mdc-form-field-flex {
+        min-height: 48px;
+      }
+    }
+
+    .clear-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+  }
+}
+
 .action-bar {
   margin-bottom: 20px;
   display: flex;
@@ -94,6 +125,28 @@
 
 .hidden-form {
   display: none;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+
+  .mat-mdc-paginator {
+    .mat-mdc-paginator-container {
+      justify-content: center;
+    }
+
+    .mat-mdc-paginator-page-size {
+      margin-right: 20px;
+    }
+
+    .mat-mdc-paginator-range-actions {
+      margin-left: 20px;
+    }
+  }
 }
 
 // Responsive design
