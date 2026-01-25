@@ -51,6 +51,15 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Is residential address same as permanent?</mat-label>
+          <mat-select formControlName="isResidentialSameAsPermanent">
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
           <mat-label>Marital Status</mat-label>
           <mat-select formControlName="maritalStatus" required>
             <mat-option value="single">Single</mat-option>
@@ -67,11 +76,11 @@
           <mat-label>Role</mat-label>
           <mat-select formControlName="role" required>
             @if (roles$ | async; as roles) {
-              @if (roles.length > 0) {
-                <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</mat-option>
-              } @else {
-                <mat-option value="">No roles available</mat-option>
-              }
+            @if (roles.length > 0) {
+            <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</mat-option>
+            } @else {
+            <mat-option value="">No roles available</mat-option>
+            }
             }
           </mat-select>
           <mat-error *ngIf="employeeForm.get('role')?.invalid && employeeForm.get('role')?.touched">
@@ -80,29 +89,59 @@
         </mat-form-field>
       </div>
 
-      <app-address-form 
-        [addressGroup]="permanentAddress" 
-        [addressType]="'permanent'" 
-        [title]="'Permanent Address'">
+      <app-address-form [addressGroup]="permanentAddress" [addressType]="'permanent'" [title]="'Permanent Address'">
       </app-address-form>
 
       @if (employeeForm.get('isResidentialSameAsPermanent')?.value === 'no') {
-        <app-address-form 
-          [addressGroup]="residentialAddress" 
-          [addressType]="'residential'" 
-          [title]="'Residential Address'">
-        </app-address-form>
+      <app-address-form [addressGroup]="residentialAddress" [addressType]="'residential'"
+        [title]="'Residential Address'">
+      </app-address-form>
       }
+
+      <fieldset class="form-section">
+				<legend>Guardian</legend>
+				<div formGroupName="guardian">
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<mat-label>Guardian Type</mat-label>
+							@if (relationshipTypes$ | async; as relations) {
+							<mat-select formControlName="relation" required>
+								@for (relation of relations; track relation) {
+								<mat-option [value]="relation">{{ relation }}</mat-option>
+								}
+							</mat-select>
+							}
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<mat-label>Guardian Name</mat-label>
+							<input matInput formControlName="name" required>
+						</mat-form-field>
+					</div>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<mat-label>Guardian Phone</mat-label>
+							<input matInput formControlName="phone" required>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Guardian Email</mat-label>
+							<input matInput formControlName="email" required>
+						</mat-form-field>
+					</div>
+				</div>
+			</fieldset>
 
       <div class="form-row">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Previous Employment History</mat-label>
-          <textarea matInput formControlName="previousEmployment" rows="4" placeholder="Institutaion Name, Place"></textarea>
+          <textarea matInput formControlName="previousEmployment" rows="4"
+            placeholder="Institutaion Name, Place"></textarea>
         </mat-form-field>
       </div>
 
       <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="!employeeForm.valid">Register Employee</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!employeeForm.valid">Register
+          Employee</button>
       </div>
     </form>
   </mat-card-content>

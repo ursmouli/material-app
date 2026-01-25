@@ -11,15 +11,15 @@ import { RolesService } from '../common/services/roles.service';
 import { CommonModule } from '@angular/common';
 import { Role } from '../common/model/role';
 import { BehaviorSubject } from 'rxjs';
-import { State } from '../common/model/state';
-import { District } from '../common/model/district';
-import { Taluk } from '../common/model/taluk';
 import { PropertiesService } from '../common/services/properties.service';
 import { EmployeeService } from '../common/services/employee.service';
 import { LocationService } from '../common/services/location.service';
 import { Country } from '../common/model/country';
 import { AddressFormHandler } from '../common/base/address-form-handler';
 import { AddressFormComponent } from '../common/address-form/address-form.component';
+import { Address } from '../common/model/address';
+import { Router } from '@angular/router';
+import { Employee } from '../common/model/registration';
 
 @Component({
   selector: 'app-employee-registration',
@@ -41,6 +41,7 @@ import { AddressFormComponent } from '../common/address-form/address-form.compon
 })
 export class EmployeeRegistrationComponent extends AddressFormHandler implements OnInit {
 
+  router = inject(Router);
   rolesService = inject(RolesService);
   propertiesService = inject(PropertiesService);
   employeeService = inject(EmployeeService);
@@ -70,7 +71,7 @@ export class EmployeeRegistrationComponent extends AddressFormHandler implements
   constructor() {
     super();
     this.cutoffDate.setFullYear(this.cutoffDate.getFullYear() - 6);
-    
+
     this.employeeForm = this.fb.group({
       firstName: ['', Validators.required],
       middleName: [''],
@@ -95,24 +96,13 @@ export class EmployeeRegistrationComponent extends AddressFormHandler implements
 
   async ngOnInit() {
     this.resetResidentialAddress();
-    
+
     const relationships: string[] = await this.propertiesService.fetchRelationships();
     this.relationshipTypes$.next(relationships);
 
     const roles = await this.rolesService.getRoles();
     console.log('Roles:', roles);
     this.roles$.next(roles);
-
-    // Initialize address form using abstract class
-    // this.initializeAddressForm(this.employeeForm);
-
-
-    // Setup address form subscriptions using abstract class
-    // this.setupAddressStateSubscriptions(
-    //   this.employeeForm,
-    //   (stateId, isPermanent) => this.loadDistricts(stateId, isPermanent),
-    //   (districtId, isPermanent) => this.loadTaluk(districtId, isPermanent)
-    // );
 
     // Setup residential address sync
     this.setupResidentialAddressSync(this.employeeForm);
@@ -143,8 +133,90 @@ export class EmployeeRegistrationComponent extends AddressFormHandler implements
   onSubmit() {
     if (this.employeeForm.valid) {
       // console.log(this.employeeForm.value);
-      // Handle form submission
+
+      const employee: Employee = {
+        firstName: this.employeeForm.get('firstName')?.value,
+        lastName: this.employeeForm.get('lastName')?.value,
+        middleName: this.employeeForm.get('middleName')?.value,
+        gender: this.employeeForm.get('gender')?.value,
+        dob: this.employeeForm.get('dob')?.value,
+        bloodGroup: this.employeeForm.get('bloodGroup')?.value,
+        permanentAddress: this.mapPermanentAddress(this.employeeForm.get('permanentAddress')?.value),
+        residentialAddress: this.mapOptionalAddress(this.employeeForm.get('residentialAddress')?.value),
+        sameAsPermanentAddress: this.employeeForm.get('isResidentialSameAsPermanent')?.value === 'yes' ? true : false,
+        guardians: this.mapGuardians(this.employeeForm.get('guardian')?.value),
+        siblings: this.employeeForm.get('siblings')?.value,
+        previousEmployment: this.employeeForm.get('previousEmployment')?.value,
+        maritalStatus: this.employeeForm.get('maritalStatus')?.value,
+        role: this.employeeForm.get('role')?.value
+      };
+
+      if (employee.sameAsPermanentAddress) {
+        employee.residentialAddress = undefined;
+      }
+
+      // console.log(employee);
+
+      this.employeeService.registerEmployee(employee).then((response) => {
+        // redirect to student-list
+        this.router.navigate(['/admin/employee-list']);
+      }).catch((error) => {
+        console.error(error);
+      });
     }
+  }
+
+  private mapGuardians(guardian: any) {
+    return [
+      {
+        name: guardian.name,
+        email: guardian.email,
+        phone: guardian.phone,
+        relation: guardian.relation
+      }
+    ]
+  }
+
+  private mapPermanentAddress(address: any): Address {
+    if (!address) {
+      throw new Error('Permanent address is required');
+    }
+
+    return {
+      houseNumber: address.houseNumber,
+      street: address.street,
+      landmark: address.landMark,
+
+      place: address.place,
+      postalCode: address.postalCode,
+      addressLine1: address.addressLine1,
+
+      countryId: address.country,
+      stateId: address.state,
+      districtId: address.district,
+      talukId: address.taluk,
+    };
+  }
+
+  private mapOptionalAddress(address: any): Address | undefined {
+    if (!address) {
+      return undefined;
+    }
+
+    return {
+      houseNumber: address.houseNumber,
+      street: address.street,
+      landmark: address.landMark,
+
+      place: address.place,
+      postalCode: address.postalCode,
+      addressLine1: address.addressLine1,
+
+      countryId: address.country,
+      stateId: address.state,
+      districtId: address.district,
+      talukId: address.taluk,
+    };
   }
 
 }

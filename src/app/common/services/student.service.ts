@@ -5,7 +5,7 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 import { environment } from "@env/environment";
-import { Student } from "../model/student";
+import { Student } from "../model/registration";
 import { firstValueFrom } from "rxjs";
 import { Pagination } from "../model/pagination";
 import { PageResponse } from "../model/pagination";

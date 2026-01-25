@@ -20,7 +20,7 @@ import { pipe, tap, from, BehaviorSubject } from 'rxjs';
 import { Country } from '../common/model/country';
 import { District } from '../common/model/district';
 import { Taluk } from '../common/model/taluk';
-import { Student } from '../common/model/student';
+import { Student } from '../common/model/registration';
 import { PropertiesService } from '../common/services/properties.service';
 import { Relation } from '../common/model/relations';
 import { Address } from '../common/model/address';
@@ -278,7 +278,7 @@ export class StudentRegistrationComponent implements OnInit {
 
       this.studentService.registerStudent(student).then((response) => {
         // redirect to student-list
-        this.router.navigate(['/student-list']);
+        this.router.navigate(['/admin/student-list']);
       }).catch((error) => {
         console.error(error);
       });
