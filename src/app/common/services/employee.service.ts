@@ -24,4 +24,8 @@ export class EmployeeService {
         return firstValueFrom(this.http.post<PageResponse<Employee>>(`${this.apiUrl}/employees/all`, pagination));
     }
 
+    updateEmployeeDepartment(employee: Employee): Promise<Employee> {
+        return firstValueFrom(this.http.post<Employee>(`${this.apiUrl}/employees/add/department`, employee));
+    }
+
 }

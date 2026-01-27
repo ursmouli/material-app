@@ -2,16 +2,16 @@ import { Address } from "./address";
 
 export interface Registration {
   id?: number;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   middleName?: string;
-  gender: string;
-  dob: Date;
+  gender?: string;
+  dob?: Date;
   bloodGroup?: string;
-  permanentAddress: Address;
+  permanentAddress?: Address;
   residentialAddress?: Address;
   sameAsPermanentAddress?: boolean;
-  guardians: Guardian[];
+  guardians?: Guardian[];
   siblings?: Sibling[];
   registrationDate?: Date;
   registrationNumber?: string;
@@ -26,7 +26,8 @@ export interface Employee extends Registration {
   maritalStatus?: string;
   previousEmployment?: string;
   role?: string;
-  department?: string;
+  departmentName?: string;
+  email?: string;
 }
 
 export interface Guardian {

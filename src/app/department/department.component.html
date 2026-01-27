@@ -58,12 +58,12 @@
           <th mat-header-cell *matHeaderCellDef>Department</th>
           <td mat-cell *matCellDef="let employee; let i = index">
             <div *ngIf="!isEditingRow(i); else editDepartment">
-              {{ employee.department || 'Not Assigned' }}
+              {{ employee.departmentName || 'Not Assigned' }}
             </div>
             <ng-template #editDepartment>
               <mat-form-field appearance="outline" class="inline-form-field">
                 <mat-label>Department</mat-label>
-                <mat-select formControlName="department">
+                <mat-select formControlName="departmentName">
                   <mat-option *ngFor="let dept of departments" [value]="dept">
                     {{ dept }}
                   </mat-option>
@@ -78,7 +78,7 @@
           <th mat-header-cell *matHeaderCellDef>Employee</th>
           <td mat-cell *matCellDef="let employee; let i = index">
             <div *ngIf="!isEditingRow(i); else editEmployee">
-              {{ employee.firstName }} {{ employee.lastName }}
+              {{ employee.firstName }} {{ employee.lastName }} ({{ employee.employeeNumber }})
             </div>
             <ng-template #editEmployee>
               <mat-form-field appearance="outline" class="inline-form-field">
