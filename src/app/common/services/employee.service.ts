@@ -28,4 +28,8 @@ export class EmployeeService {
         return firstValueFrom(this.http.post<Employee>(`${this.apiUrl}/employees/add/department`, employee));
     }
 
+    getTeachers(): Promise<Employee[]> {
+        return firstValueFrom(this.http.get<Employee[]>(`${this.apiUrl}/employees/find/teachers`));
+    }
+
 }
