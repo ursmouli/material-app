@@ -4,6 +4,7 @@ import { environment } from '@env/environment';
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { SchoolClass } from "../model/model-interfaces";
+import { PageResponse, Pagination } from "../model/pagination";
 
 
 
@@ -15,19 +16,20 @@ export class SchoolClassService {
   private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
 
-  async getAllClasses(): Promise<SchoolClass[]> {
+  async getAllClasses(pagination: Pagination): Promise<PageResponse<SchoolClass> | null> {
     try {
-      const response = await firstValueFrom(this.http.get<SchoolClass[]>(`${this.apiUrl}/classes`));
-      // console.log(response);
-      return response ? response : [];
+      console.log(pagination);
+      const response = await firstValueFrom(this.http.post<PageResponse<SchoolClass>>(`${this.apiUrl}/classes/all`, pagination));
+      console.log(response);
+      return response ? response : null;
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
-      return [];
+      return null;
     }
   }
 
-  saveClass(schoolClass: SchoolClass): Promise<SchoolClass> {
-    return firstValueFrom(this.http.post<SchoolClass>(`${this.apiUrl}/classes`, schoolClass));
+  async saveClass(schoolClass: SchoolClass): Promise<SchoolClass> {
+    return firstValueFrom(this.http.post<SchoolClass>(`${this.apiUrl}/classes/add`, schoolClass));
   }
 
 }

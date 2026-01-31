@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,8 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { Teacher } from '../common/model/teacher';
-import { Class } from '../common/model/class';
 import { SchoolClassService } from '../common/services/school-class.service';
 import { EmployeeService } from '../common/services/employee.service';
 import { Employee } from '../common/model/registration';
@@ -19,6 +17,8 @@ import { MatTableDataSource, MatHeaderCell, MatTableModule } from '@angular/mate
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { PageResponse, Pagination } from '../common/model/pagination';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-new-class',
@@ -39,7 +39,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatSortModule,
     MatPaginatorModule,
     MatInputModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    FormsModule
   ],
   templateUrl: './new-class.component.html',
   styleUrl: './new-class.component.scss'
@@ -56,6 +57,10 @@ export class NewClassComponent implements OnInit {
   pageSize = 10;
   sortField = 'name';
   sortDirection = 'ASC';
+
+  searchSubject = new Subject<string>()
+  searchTerm: string = '';
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = ['name', 'academicYear', 'actions'];
@@ -86,10 +91,11 @@ export class NewClassComponent implements OnInit {
 
   ngOnInit() {
     this.loadClasses();
+  }
 
-    this.employeeService.getTeachers().then((employees: Employee[]) => {
-      this.availableTeachers = employees;
-    });
+  searchClasses(event: Event) {
+    const searchText = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(searchText);
   }
 
   onPageChange(event: PageEvent) {
@@ -118,9 +124,16 @@ export class NewClassComponent implements OnInit {
   }
 
   loadClasses() {
-    this.schoolClassService.getAllClasses().then((classes: SchoolClass[]) => {
-      console.log(`Loaded classes ${JSON.stringify(classes)}`);
-      this.classes = classes;
+    const pagination: Pagination = {
+      page: this.pageIndex, 
+      size: this.pageSize, 
+      sortField: this.sortField, 
+      sortDirection: this.sortDirection,
+      searchTerm: this.searchTerm
+    };
+    this.schoolClassService.getAllClasses(pagination).then((classes: PageResponse<SchoolClass> | null) => {
+      console.log(`Loaded classes ${JSON.stringify(classes?.content)}`);
+      this.classes = classes?.content || [];
 
       this.classesDataSource.data = this.classes;
       this.paginator.firstPage();
@@ -128,9 +141,15 @@ export class NewClassComponent implements OnInit {
   }
 
   cancelEdit(): void {
-    this.isNewClassMode = false;
-    this.editingRow = null;
-    this.classForm.reset();
+    if (this.isNewClassMode) {
+      this.isNewClassMode = false;
+      this.editingRow = null;
+      this.classForm.reset();
+      this.classesDataSource.data = this.classes;
+    } else {
+      this.editingRow = null;
+      this.classForm.reset();
+    }
   }
 
   addNewClass() {
@@ -159,24 +178,25 @@ export class NewClassComponent implements OnInit {
 
     try {
       const savedClass = await this.schoolClassService.saveClass(schoolClass);
-      console.log(savedClass);
 
-      
-      this.classesDataSource.data[0] = savedClass;
-      this.classesDataSource.data = [...this.classesDataSource.data];
+      if (savedClass) {
+        console.log(savedClass);
+        
+        this.classesDataSource.data[0] = savedClass;
+        this.classesDataSource.data = [...this.classesDataSource.data];
 
-      this.snackBar.open('Class created successfully!', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+        this.snackBar.open('Class created successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
 
-      this.cancelEdit();
+        this.cancelEdit();
+        this.isNewClassMode = false;
+      }
     } catch (error) {
       console.error('Error saving class:', error);
     }
-
-    this.isNewClassMode = false;
   }
 
   async saveClass(): Promise<SchoolClass> {
@@ -191,7 +211,7 @@ export class NewClassComponent implements OnInit {
 
     try {
       const savedClass = await this.schoolClassService.saveClass(schoolClass);
-      console.log(savedClass);
+      // console.log(savedClass);
       this.snackBar.open('Class created successfully!', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',

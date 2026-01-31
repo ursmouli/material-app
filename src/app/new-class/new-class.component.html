@@ -4,7 +4,10 @@
     <div class="search-row">
       <mat-form-field appearance="outline">
         <mat-label>Search</mat-label>
-        <input matInput placeholder="Search classes..." />
+        <input matInput [(ngModel)]="searchTerm" 
+          (input)="searchClasses($event)"
+          placeholder="Search classes..." />
+        <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
     </div>
   </div>
