@@ -15,7 +15,7 @@ import { EmployeeService } from '../common/services/employee.service';
 import { Employee } from '../common/model/registration';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SchoolClass } from '../common/model/model-interfaces';
-import { MatTableDataSource, MatRecycleRows, MatHeaderCell, MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatHeaderCell, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -34,7 +34,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatIconModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatRecycleRows,
     MatHeaderCell,
     MatTableModule,
     MatSortModule,
@@ -88,24 +87,9 @@ export class NewClassComponent implements OnInit {
   ngOnInit() {
     this.loadClasses();
 
-
-    // Sample teachers data - in a real app, this would come from a service
-    // this.availableTeachers = [
-    //   { id: 1, name: 'Dr. Sarah Johnson', email: 'sarah.johnson@school.com', subject: 'Mathematics' },
-    //   { id: 2, name: 'Mr. Michael Chen', email: 'michael.chen@school.com', subject: 'Science' },
-    //   { id: 3, name: 'Ms. Emily Davis', email: 'emily.davis@school.com', subject: 'English' },
-    //   { id: 4, name: 'Mr. David Wilson', email: 'david.wilson@school.com', subject: 'History' },
-    //   { id: 5, name: 'Mrs. Lisa Brown', email: 'lisa.brown@school.com', subject: 'Geography' }
-    // ];
-
     this.employeeService.getTeachers().then((employees: Employee[]) => {
       this.availableTeachers = employees;
     });
-
-
-
-    // Add one section by default
-    // this.addSection();
   }
 
   onPageChange(event: PageEvent) {
@@ -123,11 +107,6 @@ export class NewClassComponent implements OnInit {
     this.classForm.patchValue(row);
   }
 
-  cancelEdit() {
-    this.editingRow = null;
-    this.classForm.reset();
-  }
-
   saveEdit() {
     this.editingRow = null;
     this.classForm.reset();
@@ -138,8 +117,19 @@ export class NewClassComponent implements OnInit {
     this.classesDataSource.data = this.classes;
   }
 
-  saveNewClass() {
+  loadClasses() {
+    this.schoolClassService.getAllClasses().then((classes: SchoolClass[]) => {
+      console.log(`Loaded classes ${JSON.stringify(classes)}`);
+      this.classes = classes;
+
+      this.classesDataSource.data = this.classes;
+      this.paginator.firstPage();
+    });
+  }
+
+  cancelEdit(): void {
     this.isNewClassMode = false;
+    this.editingRow = null;
     this.classForm.reset();
   }
 
@@ -152,106 +142,71 @@ export class NewClassComponent implements OnInit {
       name: '',
       academicYear: '',
     };
-    
+
     this.classesDataSource.data = [newClass as SchoolClass, ...this.classesDataSource.data];
     this.editingRow = 0;
   }
 
-  loadClasses() {
-    this.schoolClassService.getAllClasses().then((classes: SchoolClass[]) => {
-      console.log(classes);
-      this.classes = classes;
-
-      this.classesDataSource.data = this.classes;
-      this.paginator.firstPage();
-    });
-  }
-
-  get sections(): FormArray {
-    return this.classForm.get('sections') as FormArray;
-  }
-
-  createSection(): FormGroup {
-    return this.fb.group({
-      name: ['', [Validators.required]],
-      teacherId: ['', [Validators.required]],
-      capacity: [30, [Validators.required, Validators.min(1), Validators.max(50)]]
-    });
-  }
-
-  addSection() {
-    this.sections.push(this.createSection());
-  }
-
-  removeSection(index: number) {
-    if (this.sections.length > 1) {
-      this.sections.removeAt(index);
+  async saveNewClass() {
+    if (this.classForm.invalid) {
+      return;
     }
-  }
 
-  getTeacherName(teacherId: number): string {
-    const teacher = this.availableTeachers.find(t => t.id === teacherId);
-    return teacher ? teacher.firstName + ' ' + teacher.lastName : '';
-  }
+    const schoolClass: SchoolClass = {
+      name: this.classForm.value.name,
+      academicYear: this.classForm.value.academicYear,
+    };
 
-  async onSubmit() {
-    if (this.classForm.valid) {
-      const schoolClass: SchoolClass = {
-        name: this.classForm.value.name,
-        academicYear: this.classForm.value.academicYear,
-      };
+    try {
+      const savedClass = await this.schoolClassService.saveClass(schoolClass);
+      console.log(savedClass);
 
-      try {
-        const savedClass = await this.schoolClassService.saveClass(schoolClass);
-        console.log(savedClass);
-        this.snackBar.open('Class created successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-        this.classForm.reset();
-      } catch (error) {
-        this.snackBar.open('Error saving class', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-      }
+      
+      this.classesDataSource.data[0] = savedClass;
+      this.classesDataSource.data = [...this.classesDataSource.data];
 
-      // const classData: Class = {
-      //   id: this.generateId(),
-      //   name: this.classForm.value.name,
-      //   grade: this.classForm.value.grade,
-      //   academicYear: this.classForm.value.academicYear,
-      //   sections: this.classForm.value.sections.map((section: any, index: number) => ({
-      //     id: `SEC${index + 1}`,
-      //     name: section.name,
-      //     teacherId: section.teacherId,
-      //     capacity: section.capacity
-      //   }))
-      // };
-
-      // console.log('New Class Created:', classData);
-
-      // In a real app, you would send this to a service
-
-
-      // Reset form
-
-      // this.sections.clear();
-      // this.addSection();
-    } else {
-      this.snackBar.open('Please fill in all required fields correctly.', 'Close', {
+      this.snackBar.open('Class created successfully!', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top'
       });
+
+      this.cancelEdit();
+    } catch (error) {
+      console.error('Error saving class:', error);
     }
+
+    this.isNewClassMode = false;
   }
 
-  onSubmitSection() { }
+  async saveClass(): Promise<SchoolClass> {
+    if (this.classForm.invalid) {
+      return Promise.resolve({} as SchoolClass);
+    }
 
-  private generateId(): string {
-    return 'CLS' + Date.now().toString();
+    const schoolClass: SchoolClass = {
+      name: this.classForm.value.name,
+      academicYear: this.classForm.value.academicYear,
+    };
+
+    try {
+      const savedClass = await this.schoolClassService.saveClass(schoolClass);
+      console.log(savedClass);
+      this.snackBar.open('Class created successfully!', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
+      this.cancelEdit();
+    } catch (error) {
+      console.error(error);
+      this.snackBar.open('Error saving class', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
+      return Promise.resolve({} as SchoolClass);
+    }
+    return Promise.resolve(schoolClass);
   }
 }
