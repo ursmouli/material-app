@@ -16,16 +16,8 @@ export class SchoolClassService {
   private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
 
-  async getAllClasses(pagination: Pagination): Promise<PageResponse<SchoolClass> | null> {
-    try {
-      console.log(pagination);
-      const response = await firstValueFrom(this.http.post<PageResponse<SchoolClass>>(`${this.apiUrl}/classes/all`, pagination));
-      console.log(response);
-      return response ? response : null;
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      return null;
-    }
+  async getAllClasses(pagination: Pagination): Promise<PageResponse<SchoolClass>> {
+    return firstValueFrom(this.http.post<PageResponse<SchoolClass>>(`${this.apiUrl}/classes/all`, pagination));
   }
 
   async saveClass(schoolClass: SchoolClass): Promise<SchoolClass> {

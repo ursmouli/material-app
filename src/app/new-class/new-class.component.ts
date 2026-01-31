@@ -18,7 +18,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { PageResponse, Pagination } from '../common/model/pagination';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-new-class',
@@ -90,6 +90,18 @@ export class NewClassComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    )
+    .subscribe((value: string | undefined) => {
+      console.log(value);
+      this.searchTerm = value || '';
+      this.pageIndex = 0;
+      this.loadClasses();
+    });
+
     this.loadClasses();
   }
 
@@ -131,11 +143,13 @@ export class NewClassComponent implements OnInit {
       sortDirection: this.sortDirection,
       searchTerm: this.searchTerm
     };
-    this.schoolClassService.getAllClasses(pagination).then((classes: PageResponse<SchoolClass> | null) => {
-      console.log(`Loaded classes ${JSON.stringify(classes?.content)}`);
-      this.classes = classes?.content || [];
 
-      this.classesDataSource.data = this.classes;
+    this.schoolClassService.getAllClasses(pagination).then((schoolClasses: PageResponse<SchoolClass>) => {
+      console.log(`Loaded classes ${JSON.stringify(schoolClasses?.content)}`);
+      this.classes = schoolClasses?.content || [];
+
+      this.classesDataSource.data = [...this.classes];
+      this.totalElements = schoolClasses.totalElements;
       this.paginator.firstPage();
     });
   }
@@ -145,7 +159,6 @@ export class NewClassComponent implements OnInit {
       this.isNewClassMode = false;
       this.editingRow = null;
       this.classForm.reset();
-      this.classesDataSource.data = this.classes;
     } else {
       this.editingRow = null;
       this.classForm.reset();
