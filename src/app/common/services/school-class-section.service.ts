@@ -24,6 +24,10 @@ export class SchoolClassSectionService {
     return firstValueFrom(this.http.post<Section>(`${this.apiUrl}/sections/add`, section));
   }
 
+  async updateSection(section: Section): Promise<Section> {
+    return firstValueFrom(this.http.post<Section>(`${this.apiUrl}/sections/update`, section));
+  }
+
   async getClasses(): Promise<SchoolClass[]> {
     return firstValueFrom(this.http.get<SchoolClass[]>(`${this.apiUrl}/classes/all`));
   }

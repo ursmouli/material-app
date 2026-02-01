@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { SchoolClass, Section } from '../common/model/model-interfaces';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { PageResponse, Pagination } from '../common/model/pagination';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-section',
@@ -30,7 +31,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
     MatSelectModule,
     FormsModule,
     MatPaginatorModule
-],
+  ],
   templateUrl: './section.component.html',
   styleUrl: './section.component.scss'
 })
@@ -43,6 +44,7 @@ export class SectionComponent implements OnInit {
 
   classSectionService = inject(SchoolClassSectionService);
   employeeService = inject(EmployeeService);
+  snackbar = inject(MatSnackBar);
 
   editingRow: number | null = null;
   isNewSection: boolean = false;
@@ -61,6 +63,7 @@ export class SectionComponent implements OnInit {
   searchTerm: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatTable) table!: MatTable<any>;
 
   constructor() {
     this.sectionForm = new FormGroup({
@@ -100,9 +103,9 @@ export class SectionComponent implements OnInit {
 
   loadSections() {
     const pagination: Pagination = {
-      page: this.pageIndex, 
-      size: this.pageSize, 
-      sortField: this.sortField, 
+      page: this.pageIndex,
+      size: this.pageSize,
+      sortField: this.sortField,
       sortDirection: this.sortDirection,
       searchTerm: this.searchTerm
     };
@@ -119,28 +122,53 @@ export class SectionComponent implements OnInit {
 
     const newSection: Partial<Section> = {
       name: '',
-      schoolClass: {name: ''},
-      classTeacher: {employeeNumber: ''}
+      schoolClass: { name: '' },
+      classTeacher: { employeeNumber: '' }
     };
     this.sectionsDataSource.data = [newSection as Section, ...this.sectionsDataSource.data];
     this.editingRow = 0;
   }
 
-  saveNewSection() {
+  async saveNewSection() {
     if (this.sectionForm.invalid) {
       return;
     }
 
     const newSection: Section = {
       name: this.sectionForm.value.name,
-      schoolClass: {id: this.sectionForm.value.schoolClassId},
-      classTeacher: {id: this.sectionForm.value.classTeacherId}
+      schoolClass: { id: this.sectionForm.value.schoolClassId },
+      classTeacher: { id: this.sectionForm.value.classTeacherId }
     }
+
     console.log(newSection);
-    this.classSectionService.saveSection(newSection).then((section: Section) => {
-      this.sectionsDataSource.data.push(section);
-      this.sectionForm.reset();
-    });
+
+    try {
+      const savedSection: Section = await this.classSectionService.saveSection(newSection);
+
+      if (savedSection) {
+        console.log(this.sectionsDataSource.data);
+
+        this.sectionsDataSource.data[0] = savedSection;
+        this.sectionsDataSource.data = [...this.sectionsDataSource.data];
+        if (this.table) {
+          this.table.renderRows();
+        }
+
+        this.snackbar.open('Section saved successfully', 'Close', {
+          duration: 4000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center'
+        });
+
+        this.reset();
+      }
+    } catch (error) {
+      this.snackbar.open('Failed to save section', 'Close', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
+      });
+      console.error(error);
+    }
   }
 
   isEditingRow(index: number): boolean {
@@ -156,9 +184,46 @@ export class SectionComponent implements OnInit {
     });
   }
 
-  saveEdit() {
-    this.editingRow = null;
-    this.sectionForm.reset();
+  async saveEdit() {
+    if (this.sectionForm.invalid) {
+      return;
+    }
+
+    const newSection: Section = {
+      name: this.sectionForm.value.name,
+      schoolClass: { id: this.sectionForm.value.schoolClassId },
+      classTeacher: { id: this.sectionForm.value.classTeacherId }
+    }
+
+    console.log(newSection);
+
+    try {
+      const savedSection: Section = await this.classSectionService.updateSection(newSection);
+
+      if (savedSection) {
+        console.log(this.sectionsDataSource.data);
+
+        this.sectionsDataSource.data[0] = savedSection;
+        this.sectionsDataSource.data = [...this.sectionsDataSource.data];
+        if (this.table) {
+          this.table.renderRows();
+        }
+
+        this.snackbar.open('Section saved successfully', 'Close', {
+          duration: 4000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center'
+        });
+
+        this.reset();
+      }
+    } catch (error) {
+      this.snackbar.open('Failed to save section', 'Close', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
+      });
+      console.error(error);
+    }
   }
 
   deleteSection(index: number) {
@@ -166,10 +231,15 @@ export class SectionComponent implements OnInit {
     this.sectionsDataSource.data = [...this.sectionsDataSource.data];
   }
 
+  reset() {
+    this.sectionForm.reset();
+    this.isNewSection = false;
+    this.editingRow = null;
+  }
+
   cancelEdit() {
     if (this.isNewSection) {
       this.sectionsDataSource.data = this.sectionsDataSource.data.filter((_, index) => index !== this.editingRow);
-
       this.isNewSection = false;
       this.editingRow = null;
       this.sectionForm.reset();
