@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { SideNavigationComponent } from './side-navigation/side-navigation.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { UserHomeComponent } from './user-home/user-home.component';
@@ -8,7 +7,6 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { TestComponentsComponent } from './test-components/test-components.component';
 import { EmployeeRegistrationComponent } from './employee-registration/employee-registration.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { NewClassComponent } from './new-class/new-class.component';
@@ -19,9 +17,11 @@ import { StudentRegistrationComponent } from './student-registration/student-reg
 import { LocationComponent } from './location/location.component';
 import { StudentListComponent } from './student-list/student-list.component';
 import { DepartmentComponent } from './department/department.component';
+import { SectionComponent } from './section/section.component';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
-    { path: 'test', component: TestComponentsComponent },
+    { path: 'test', component: TestComponent },
     { path: 'welcome', component: WelcomeComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'login', component: LoginComponent },
@@ -41,6 +41,7 @@ export const routes: Routes = [
             { path: 'assign-subject', component: AssignSubjectsComponent },
             { path: 'classes', component: ClassesComponent },
             { path: 'new-class', component: NewClassComponent },
+            { path: 'section', component: SectionComponent },
             { path: 'add-employee', component: EmployeeRegistrationComponent },
             { path: 'employee-list', component: EmployeeListComponent },
             { path: 'add-student', component: StudentRegistrationComponent },

@@ -1,0 +1,115 @@
+<div class="section-container">
+  <h2>Section Management</h2>
+
+  <div class="search-section">
+    <div class="search-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchTerm" placeholder="Search sections...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button mat-raised-button color="primary" (click)="addNewSection()">
+      <mat-icon>add</mat-icon>
+      Add New Section
+    </button>
+  </div>
+
+  <div class="table-container">
+    <form [formGroup]="sectionForm">
+      <table mat-table [dataSource]="sectionsDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let row; let i = index">
+            <div *ngIf="!isEditingRow(i); else editName">
+              {{row.name}}
+            </div>
+            <ng-template #editName>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Section Name</mat-label>
+                <input matInput formControlName="name">
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="class">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let row; let i = index">
+            <div *ngIf="!isEditingRow(i); else editSchoolClass">
+              {{row.schoolClass.name}}
+            </div>
+            <ng-template #editSchoolClass>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Section Class</mat-label>
+                <mat-select formControlName="schoolClassId">
+                  <mat-option *ngFor="let schoolClass of classes" [value]="schoolClass.id">
+                    {{schoolClass.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="classTeacher">
+          <th mat-header-cell *matHeaderCellDef>Class Teacher</th>
+          <td mat-cell *matCellDef="let row; let i = index">
+            <div *ngIf="!isEditingRow(i); else editClassTeacher">
+              {{row.classTeacher.firstName}} {{row.classTeacher.lastName}} ({{row.classTeacher.employeeNumber}})
+            </div>
+            <ng-template #editClassTeacher>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Section Class Teacher</mat-label>
+                <mat-select formControlName="classTeacherId">
+                  <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+                    {{teacher.firstName}} {{teacher.lastName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row; let i = index">
+            <div *ngIf="!isEditingRow(i); else editActions">
+              <button mat-icon-button color="primary" (click)="startEdit(row, i)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteSection(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <ng-template #editActions>
+              <button mat-icon-button color="primary" (click)="isNewSection ? saveNewSection() : saveEdit()">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="cancelEdit()">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"
+            [class.editing-row]="isEditingRow(i)"></tr>
+      </table>
+
+      <div *ngIf="sectionsDataSource.data.length === 0" class="no-data">
+        <p>No sections found</p>
+      </div>
+    </form>
+
+    <div class="pagination-container">
+      <mat-paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]" [length]="totalElements"
+        [pageIndex]="pageIndex" (page)="onPageChange($event)" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </div>
+</div>

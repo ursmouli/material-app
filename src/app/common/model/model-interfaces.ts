@@ -2,7 +2,7 @@ import { Employee } from "./registration";
 
 export interface SchoolClass {
   id?: number;
-  name: string;
+  name?: string;
   academicYear?: string;
   sections?: Section[];
 }
@@ -11,6 +11,8 @@ export interface SchoolClass {
 export interface Section {
   id?: number;
   name: string;
-  schoolClass: SchoolClass;
-  classTeacher: Employee; // with role = Teacher
+  schoolClass: SchoolClass; // class name
+  classTeacher: Employee; // employee number and should be teacher
+  schoolClassId?: number;
+  classTeacherId?: number;
 }

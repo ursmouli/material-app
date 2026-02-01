@@ -1,0 +1,77 @@
+<div class="page-container">
+  <h2>Test Page</h2>
+
+  <div class="search-section">
+
+  </div>
+
+  <div class="table-container">
+
+    <table mat-table [dataSource]="employeeDataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <ng-container *ngIf="!isEditing(i); else editId">
+            {{ element.id }}
+          </ng-container>
+          <ng-template #editId let-element>
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>ID</mat-label>
+              <input matInput [value]="element.id">
+            </mat-form-field>
+          </ng-template>
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <ng-container *ngIf="!isEditing(i); else editName">
+            {{ element.name }}
+          </ng-container>
+          <ng-template #editName let-element>
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Name</mat-label>
+              <input matInput [value]="element.name">
+            </mat-form-field>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <div *ngIf="!isEditing(i); else editActions">
+            <button mat-button>
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-button (click)="startEdit(i)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-button (click)="deleteRow(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <ng-template #editActions>
+            <button mat-button (click)="saveEdit(i)">
+              <mat-icon>save</mat-icon>
+            </button>
+            <button mat-button (click)="cancelEdit(i)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+  </div>
+
+  <div class="pagination-section">
+
+  </div>
+</div>
