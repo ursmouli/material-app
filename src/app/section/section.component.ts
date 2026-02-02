@@ -16,6 +16,7 @@ import { PageResponse, Pagination } from '../common/model/pagination';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppError } from '../common/interceptors/app-error';
 
 @Component({
   selector: 'app-section',
@@ -162,12 +163,15 @@ export class SectionComponent implements OnInit {
 
         this.reset();
       }
-    } catch (error) {
-      this.snackbar.open('Failed to save section', 'Close', {
+    } catch (err: any) {
+      console.error(err);
+      const error = err as AppError;
+      const errorMessage = error.message;
+      
+      this.snackbar.open(errorMessage, 'Close', {
         verticalPosition: 'top',
         horizontalPosition: 'center'
       });
-      console.error(error);
     }
   }
 
@@ -217,12 +221,14 @@ export class SectionComponent implements OnInit {
 
         this.reset();
       }
-    } catch (error) {
-      this.snackbar.open('Failed to save section', 'Close', {
+    } catch (err: any) {
+      console.error(err);
+      const errorMessage = err.error?.message || 'Failed to save section';
+      
+      this.snackbar.open(errorMessage, 'Close', {
         verticalPosition: 'top',
         horizontalPosition: 'center'
       });
-      console.error(error);
     }
   }
 
