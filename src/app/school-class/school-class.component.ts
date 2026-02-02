@@ -18,7 +18,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { PageResponse, Pagination } from '../common/model/pagination';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-new-class',
@@ -42,8 +42,8 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged, Subject } from 'rx
     MatButtonToggleModule,
     FormsModule
   ],
-  templateUrl: './new-class.component.html',
-  styleUrl: './new-class.component.scss'
+  templateUrl: './school-class.component.html',
+  styleUrl: './school-class.component.scss'
 })
 export class NewClassComponent implements OnInit {
   classForm: FormGroup;

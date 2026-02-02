@@ -5,7 +5,7 @@
     <div class="search-row">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Search</mat-label>
-        <input matInput [(ngModel)]="searchTerm" placeholder="Search sections...">
+        <input matInput [(ngModel)]="searchTerm" (input)="searchSections($event)" placeholder="Search sections...">
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
     </div>
@@ -81,7 +81,7 @@
               <button mat-icon-button color="primary" (click)="startEdit(row, i)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteSection(i)">
+              <button mat-icon-button color="warn" (click)="deleteSection(row, i)">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

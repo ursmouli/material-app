@@ -9,8 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { EmployeeRegistrationComponent } from './employee-registration/employee-registration.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { NewClassComponent } from './new-class/new-class.component';
-import { ClassesComponent } from './classes/classes.component';
+import { NewClassComponent } from './school-class/school-class.component';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { AssignSubjectsComponent } from './assign-subjects/assign-subjects.component';
 import { StudentRegistrationComponent } from './student-registration/student-registration.component';
@@ -37,17 +36,26 @@ export const routes: Routes = [
         component: AdminHomeComponent,
         children: [
             { path: '', component: AdminDashboardComponent },
+
+            /* Settings */
+            { path: 'location', component: LocationComponent },
+
+            /* Employees */
+            { path: 'employees', component: EmployeeListComponent },
+            { path: 'add-employee', component: EmployeeRegistrationComponent },
+            { path: 'departments', component: DepartmentComponent },
+
+            /* Students */
+            { path: 'students', component: StudentListComponent },
+            { path: 'add-student', component: StudentRegistrationComponent },
+
+            /* Subjects */
             { path: 'subjects', component: SubjectsComponent },
             { path: 'assign-subject', component: AssignSubjectsComponent },
-            { path: 'classes', component: ClassesComponent },
-            { path: 'new-class', component: NewClassComponent },
-            { path: 'section', component: SectionComponent },
-            { path: 'add-employee', component: EmployeeRegistrationComponent },
-            { path: 'employee-list', component: EmployeeListComponent },
-            { path: 'add-student', component: StudentRegistrationComponent },
-            { path: 'location', component: LocationComponent },
-            { path: 'student-list', component: StudentListComponent },
-            { path: 'departments', component: DepartmentComponent }
+
+            /* Classes & Sections */
+            { path: 'classes', component: NewClassComponent },
+            { path: 'sections', component: SectionComponent },
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },

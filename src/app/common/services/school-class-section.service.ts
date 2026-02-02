@@ -20,6 +20,10 @@ export class SchoolClassSectionService {
     return firstValueFrom(this.http.post<PageResponse<Section>>(`${this.apiUrl}/sections/all`, pagination));
   }
 
+  async deleteSection(section: Section): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${this.apiUrl}/sections/delete/${section.schoolClass.id}/${section.classTeacher.id}`));
+  }
+
   async saveSection(section: Section): Promise<Section> {
     return firstValueFrom(this.http.post<Section>(`${this.apiUrl}/sections/add`, section));
   }

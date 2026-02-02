@@ -96,6 +96,11 @@ export class SectionComponent implements OnInit {
     this.loadSections();
   }
 
+  searchSections(event: Event) {
+    const searchText = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(searchText);
+  }
+
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -232,9 +237,15 @@ export class SectionComponent implements OnInit {
     }
   }
 
-  deleteSection(index: number) {
-    this.sectionsDataSource.data.splice(index, 1);
-    this.sectionsDataSource.data = [...this.sectionsDataSource.data];
+  async deleteSection(row: Section, index: number) {
+    try {
+      await this.classSectionService.deleteSection(row);
+
+      this.sectionsDataSource.data.splice(index, 1);
+      this.sectionsDataSource.data = [...this.sectionsDataSource.data];
+    } catch (err) {
+      
+    }
   }
 
   reset() {
