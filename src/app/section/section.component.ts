@@ -17,6 +17,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppError } from '../common/interceptors/app-error';
+import { NotificationService } from '../common/services/notification.service';
 
 @Component({
   selector: 'app-section',
@@ -46,6 +47,7 @@ export class SectionComponent implements OnInit {
   classSectionService = inject(SchoolClassSectionService);
   employeeService = inject(EmployeeService);
   snackbar = inject(MatSnackBar);
+  notificationService = inject(NotificationService);
 
   editingRow: number | null = null;
   isNewSection: boolean = false;
@@ -160,11 +162,7 @@ export class SectionComponent implements OnInit {
           this.table.renderRows();
         }
 
-        this.snackbar.open('Section saved successfully', 'Close', {
-          duration: 4000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center'
-        });
+        this.notificationService.showNotification('Section saved successfully', 'success');
 
         this.reset();
       }
@@ -218,11 +216,7 @@ export class SectionComponent implements OnInit {
           this.table.renderRows();
         }
 
-        this.snackbar.open('Section saved successfully', 'Close', {
-          duration: 4000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center'
-        });
+        this.notificationService.showNotification('Section updated successfully', 'success');
 
         this.reset();
       }
@@ -230,10 +224,7 @@ export class SectionComponent implements OnInit {
       console.error(err);
       const errorMessage = err.error?.message || 'Failed to save section';
       
-      this.snackbar.open(errorMessage, 'Close', {
-        verticalPosition: 'top',
-        horizontalPosition: 'center'
-      });
+      this.notificationService.showNotification(errorMessage, 'error');
     }
   }
 
@@ -243,6 +234,8 @@ export class SectionComponent implements OnInit {
 
       this.sectionsDataSource.data.splice(index, 1);
       this.sectionsDataSource.data = [...this.sectionsDataSource.data];
+
+      this.notificationService.showNotification('Section deleted successfully', 'success');
     } catch (err) {
       
     }
