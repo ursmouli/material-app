@@ -1,22 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
-
-interface Subject {
-  id: number;
-  name: string;
-  code: string;
-  description: string;
-  credits: number;
-  department: string;
-}
+import { SubjectService } from '../common/services/subject.service';
+import { DepartmentService } from '../common/services/department.service';
+import { Subject } from '../common/model/subject';
+import { Department } from '../common/model/department';
+import { MatOption } from "@angular/material/core";
+import { MatSelect } from "@angular/material/select";
 
 @Component({
   selector: 'app-subjects',
@@ -28,78 +24,51 @@ interface Subject {
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule,
     MatSnackBarModule,
-    FormsModule
+    FormsModule,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './subjects.component.html',
   styleUrl: './subjects.component.scss'
 })
 export class SubjectsComponent implements OnInit {
   subjects: Subject[] = [];
+  departments: Department[] = [];
   filteredSubjects: Subject[] = [];
-  displayedColumns: string[] = ['id', 'name', 'code', 'description', 'credits', 'department'];
+  displayedColumns: string[] = ['id', 'name', 'code', 'description', 'credits', 'department', 'actions'];
   searchTerm: string = '';
   showAddDialog: boolean = false;
 
+  subjectService = inject(SubjectService);
+  departmentService = inject(DepartmentService);
+
+  department: Department = {
+    id: 0,
+    name: ''
+  };
+
+  // selectedDepartment?: Department;
   newSubject: Partial<Subject> = {
     name: '',
     code: '',
     description: '',
     credits: 1,
-    department: ''
+    edit: false
   };
 
   constructor(
-    private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit() {
-    // Sample data - in a real app, this would come from a service
-    this.subjects = [
-      {
-        id: 1,
-        name: 'Mathematics',
-        code: 'MATH101',
-        description: 'Introduction to basic mathematical concepts including algebra, geometry, and calculus',
-        credits: 3,
-        department: 'Mathematics'
-      },
-      {
-        id: 2,
-        name: 'Physics',
-        code: 'PHYS101',
-        description: 'Fundamental principles of physics including mechanics, thermodynamics, and electromagnetism',
-        credits: 4,
-        department: 'Physics'
-      },
-      {
-        id: 3,
-        name: 'Chemistry',
-        code: 'CHEM101',
-        description: 'Basic concepts of chemistry including atomic structure, chemical bonding, and reactions',
-        credits: 3,
-        department: 'Chemistry'
-      },
-      {
-        id: 4,
-        name: 'English Literature',
-        code: 'ENGL101',
-        description: 'Study of classic and contemporary English literature with focus on critical analysis',
-        credits: 2,
-        department: 'English'
-      },
-      {
-        id: 5,
-        name: 'Computer Science',
-        code: 'CS101',
-        description: 'Introduction to programming, algorithms, and computer systems',
-        credits: 3,
-        department: 'Computer Science'
-      }
-    ];
-    this.filteredSubjects = [...this.subjects];
+    this.subjectService.getSubjects().then((value: Subject[]) => {
+      this.subjects = value;
+      this.filteredSubjects = [...this.subjects];
+    });
+    this.departmentService.getDepartments().then((value: Department[]) => {
+      this.departments = value;
+    });
   }
 
   onSearch() {
@@ -109,8 +78,7 @@ export class SubjectsComponent implements OnInit {
       this.filteredSubjects = this.subjects.filter(subject =>
         subject.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         subject.code.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        subject.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        subject.department.toLowerCase().includes(this.searchTerm.toLowerCase())
+        subject.description.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
   }
@@ -121,27 +89,52 @@ export class SubjectsComponent implements OnInit {
       name: '',
       code: '',
       description: '',
-      credits: 1,
-      department: ''
+      credits: 100
     };
   }
 
   closeAddDialog() {
     this.showAddDialog = false;
+    this.newSubject.edit = false;
+  }
+
+  editSubject(subject: Subject) {
+    console.log('Edit subject:', subject);
+    this.newSubject = {
+      ...subject
+    };
+    this.newSubject.edit = true;
+    this.showAddDialog = true;
+  }
+
+  compareFn(dept1: any, dept2: any): boolean {
+    return dept1 && dept2 ? dept1.id === dept2.id : dept1 === dept2;
+  }
+
+  deleteSubject(subject: Subject) {
+    console.log('Delete subject:', subject);
+  }
+
+  updateSubject() {
+    console.log('Update subject:', this.newSubject);
+    if (this.isValidSubject() && this.newSubject.id) {
+      const index = this.subjects.findIndex(subject => subject.id === this.newSubject.id);
+      if (index !== -1) {
+        this.subjects[index] = this.newSubject as Subject;
+        this.filteredSubjects = [...this.subjects];
+        this.snackBar.open('Subject updated successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        this.closeAddDialog();
+      }
+    }
   }
 
   addSubject() {
-    if (this.newSubject.name && this.newSubject.code && this.newSubject.description && this.newSubject.department) {
-      const subject: Subject = {
-        id: this.subjects.length + 1,
-        name: this.newSubject.name,
-        code: this.newSubject.code,
-        description: this.newSubject.description,
-        credits: this.newSubject.credits || 1,
-        department: this.newSubject.department
-      };
-
-      this.subjects.push(subject);
+    if (this.isValidSubject()) {
+      this.subjects.push(this.newSubject as Subject);
       this.filteredSubjects = [...this.subjects];
 
       this.snackBar.open('Subject added successfully!', 'Close', {
@@ -151,12 +144,18 @@ export class SubjectsComponent implements OnInit {
       });
 
       this.closeAddDialog();
-    } else {
+    }
+  }
+
+  isValidSubject(): boolean {
+    const result = !!this.newSubject.name && !!this.newSubject.code && !!this.newSubject.description && !!this.newSubject.department;
+    if (!result) {
       this.snackBar.open('Please fill in all required fields.', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top'
       });
     }
+    return result;
   }
 }
