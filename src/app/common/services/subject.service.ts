@@ -19,6 +19,6 @@ export class SubjectService {
   }
 
   addSubject(subject: Subject): Promise<Subject> {
-    return firstValueFrom(this.http.post<Subject>(`${this.apiUrl}/subjects`, subject));
+    return firstValueFrom(this.http.post<Subject>(`${this.apiUrl}/subjects/add`, subject));
   }
 }

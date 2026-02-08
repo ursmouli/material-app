@@ -115,46 +115,53 @@ export class SubjectsComponent implements OnInit {
     console.log('Delete subject:', subject);
   }
 
-  updateSubject() {
+  async updateSubject() {
     console.log('Update subject:', this.newSubject);
     if (this.isValidSubject() && this.newSubject.id) {
+      
       const index = this.subjects.findIndex(subject => subject.id === this.newSubject.id);
       if (index !== -1) {
-        this.subjects[index] = this.newSubject as Subject;
-        this.filteredSubjects = [...this.subjects];
-        this.snackBar.open('Subject updated successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-        this.closeAddDialog();
+        try {
+          const savedSubject = await this.subjectService.addSubject(this.newSubject as Subject);
+          this.subjects[index] = savedSubject;
+          this.filteredSubjects = [...this.subjects];
+          this.message('Subject updated successfully!');
+          this.closeAddDialog();
+        } catch (error) {
+          this.message('Failed to update subject');
+          return;
+        }
       }
     }
   }
 
-  addSubject() {
+  private message(msg: string) {
+    this.snackBar.open(msg, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
+  }
+
+  async addSubject() {
     if (this.isValidSubject()) {
-      this.subjects.push(this.newSubject as Subject);
-      this.filteredSubjects = [...this.subjects];
-
-      this.snackBar.open('Subject added successfully!', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
-
-      this.closeAddDialog();
+      try {
+        const savedSubject = await this.subjectService.addSubject(this.newSubject as Subject);
+        this.subjects.push(savedSubject);
+        this.filteredSubjects = [...this.subjects];
+        this.message('Subject added successfully!');
+        this.closeAddDialog();
+      } catch (error) {
+        this.message('Failed to add subject');
+        return;
+      }
     }
   }
 
   isValidSubject(): boolean {
     const result = !!this.newSubject.name && !!this.newSubject.code && !!this.newSubject.description && !!this.newSubject.department;
     if (!result) {
-      this.snackBar.open('Please fill in all required fields.', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.message('Please fill in all required fields.');
     }
     return result;
   }
