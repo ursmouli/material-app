@@ -16,32 +16,79 @@
     </button>
   </div>
   <div class="table-container">
-    <table mat-table [dataSource]="filteredDepartments" class="mat-elevation-z8">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let department"> {{department.id}} </td>
-      </ng-container>
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let department"> {{department.name}} </td>
-      </ng-container>
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Description </th>
-        <td mat-cell *matCellDef="let department"> {{department.description}} </td>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let department">
-          <button mat-icon-button color="primary">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <form [formGroup]="departmentForm">
+      <table mat-table [dataSource]="departmentsDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let department"> {{department.id}} </td>
+          <input type="hidden" formControlName="id">
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let department; let i = index">
+            <div *ngIf="!isEditingRow(i); else editName">
+              {{department.name}}
+            </div>
+            <ng-template #editName>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Department Name</mat-label>
+                <input matInput formControlName="name" placeholder="Name">
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef> Code </th>
+          <td mat-cell *matCellDef="let department; let i = index">
+            <div *ngIf="!isEditingRow(i); else editCode">
+              {{department.code}}
+            </div>
+            <ng-template #editCode>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Department Code</mat-label>
+                <input matInput formControlName="code" placeholder="Code">
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let department; let i = index">
+            <div *ngIf="!isEditingRow(i); else editDescription">
+              {{department.description}}
+            </div>
+            <ng-template #editDescription>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Department Description</mat-label>
+                <input matInput formControlName="description" placeholder="Description">
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let department; let i = index">
+            <div *ngIf="!isEditingRow(i); else editActions">
+              <button mat-icon-button color="primary" (click)="editDepartment(i)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteDepartment(i, department.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <ng-template #editActions>
+              <button mat-icon-button color="primary" (click)="submitDepartment(department)">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="cancelEdit()">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </form>
   </div>
 </div>

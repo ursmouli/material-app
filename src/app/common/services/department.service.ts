@@ -18,6 +18,14 @@ export class DepartmentService {
   }
 
   addDepartment(department: Department): Promise<Department> {
-    return firstValueFrom(this.http.post<Department>(`${this.apiUrl}/departments`, department));
+    return firstValueFrom(this.http.post<Department>(`${this.apiUrl}/departments/add`, department));
+  }
+
+  updateDepartment(department: Department): Promise<Department> {
+    return firstValueFrom(this.http.put<Department>(`${this.apiUrl}/departments/update`, department));
+  }
+
+  deleteDepartment(id: number): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${this.apiUrl}/departments/delete/${id}`));
   }
 }
