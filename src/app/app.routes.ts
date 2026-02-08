@@ -18,6 +18,7 @@ import { StudentListComponent } from './student-list/student-list.component';
 import { DepartmentComponent } from './department/department.component';
 import { SectionComponent } from './section/section.component';
 import { TestComponent } from './test/test.component';
+import { EmployeeDepartmentComponent } from './employee-department/employee-department.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponent },
@@ -39,11 +40,12 @@ export const routes: Routes = [
 
             /* Settings */
             { path: 'location', component: LocationComponent },
+            { path: 'departments', component: DepartmentComponent },
 
             /* Employees */
             { path: 'employees', component: EmployeeListComponent },
             { path: 'add-employee', component: EmployeeRegistrationComponent },
-            { path: 'departments', component: DepartmentComponent },
+            { path: 'employee-departments', component: EmployeeDepartmentComponent },
 
             /* Students */
             { path: 'students', component: StudentListComponent },
