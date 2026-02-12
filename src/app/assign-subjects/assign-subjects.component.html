@@ -4,17 +4,17 @@
   <!-- Class Selection -->
   <mat-form-field appearance="outline" class="class-select-field">
     <mat-label>Select Class</mat-label>
-    <mat-select [(ngModel)]="selectedClassId" (selectionChange)="onClassChange()">
-      <mat-option *ngFor="let class of classes" [value]="class.id">
-        {{ class.name }} (Grade {{ class.grade }} - {{ class.academicYear }})
+    <mat-select [(ngModel)]="selectdSection" (selectionChange)="onClassChange()">
+      <mat-option *ngFor="let section of sections" [value]="section">
+        {{ section.name }} (Grade {{ section.schoolClass.name }}) ({{ section.schoolClass.academicYear }})
       </mat-option>
     </mat-select>
   </mat-form-field>
 
   <!-- Assignment Interface -->
-  <div *ngIf="selectedClass" class="assignment-section">
+  <div *ngIf="selectdSection" class="assignment-section">
     <div class="assignment-header">
-      <h3>Assigning subjects to: {{ selectedClass.name }}</h3>
+      <h3>Assigning subjects to Section: {{ selectdSection.name }}</h3>
     </div>
 
     <div class="assignment-content">
@@ -29,7 +29,7 @@
           <mat-list class="subjects-list">
             <mat-list-item *ngFor="let subject of availableSubjects" class="subject-item">
                 <span matListItemTitle>{{ subject.name }}</span>
-                <span matListItemLine>{{ subject.code }} • {{ subject.credits }} credits • {{ subject.department }}</span>
+                <span matListItemLine>{{ subject.code }} • {{ subject.credits }} credits • {{ subject.department?.name }}</span>
                 <button mat-icon-button matListItemMeta color="primary" (click)="assignSubject(subject)" class="assign-btn">
                   <mat-icon>add</mat-icon>
                 </button>
@@ -54,9 +54,9 @@
             <mat-chip-listbox>
               <mat-chip *ngFor="let subject of getAssignedSubjects()"
                        [removable]="true"
-                       (removed)="removeSubject(subject)"
+                       (removed)="removeSubject(subject.id!)"
                        class="assigned-chip">
-                {{ subject.name }} ({{ subject.code }})
+                {{ subject.subject?.name }} ({{ subject.subject?.code }})
                 <button matChipRemove>
                   <mat-icon>cancel</mat-icon>
                 </button>
@@ -72,11 +72,11 @@
           <mat-list *ngIf="getAssignedSubjects().length > 0" class="assigned-list">
             <mat-list-item *ngFor="let subject of getAssignedSubjects()" class="assigned-item">
               <div class="subject-info">
-                <div class="subject-name">{{ subject.name }}</div>
-                <div class="subject-details">{{ subject.code }} • {{ subject.credits }} credits • {{ subject.department }}</div>
-                <div class="subject-description">{{ subject.description }}</div>
+                <div class="subject-name">{{ subject.subject?.name }}</div>
+                <div class="subject-details">{{ subject.subject?.code }} • {{ subject.subject?.credits }} credits • {{ subject.subject?.department?.name }}</div>
+                <div class="subject-description">{{ subject.subject?.description }}</div>
               </div>
-              <button mat-icon-button color="warn" (click)="removeSubject(subject)" class="remove-btn">
+              <button mat-icon-button color="warn" (click)="removeSubject(subject.id!)" class="remove-btn">
                 <mat-icon>remove</mat-icon>
               </button>
             </mat-list-item>
@@ -87,7 +87,7 @@
   </div>
 
   <!-- No Class Selected Message -->
-  <div *ngIf="!selectedClass" class="no-selection">
+  <!-- <div *ngIf="!selectedClass" class="no-selection">
     <mat-card class="info-card">
       <mat-card-content>
         <div class="info-content">
@@ -96,5 +96,5 @@
         </div>
       </mat-card-content>
     </mat-card>
-  </div>
+  </div> -->
 </div>

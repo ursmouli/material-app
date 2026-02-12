@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { SchoolClassSectionService } from '../common/services/school-class-section.service';
+import { SchoolClassService } from '../common/services/school-class.service';
 import { EmployeeService } from '../common/services/employee.service';
 import { Employee } from '../common/model/registration';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -66,7 +66,7 @@ export class NewClassComponent implements OnInit {
   displayedColumns: string[] = ['name', 'academicYear', 'actions'];
   classesDataSource = new MatTableDataSource<SchoolClass>([]);
 
-  schoolClassService = inject(SchoolClassSectionService);
+  schoolClassService = inject(SchoolClassService);
   employeeService = inject(EmployeeService);
 
   // Editing state

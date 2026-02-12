@@ -7,7 +7,7 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { SchoolClassSectionService } from '../common/services/school-class-section.service';
+import { SchoolClassService } from '../common/services/school-class.service';
 import { EmployeeService } from '../common/services/employee.service';
 import { Employee } from '../common/model/registration';
 import { MatOption } from "@angular/material/core";
@@ -18,6 +18,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppError } from '../common/interceptors/app-error';
 import { NotificationService } from '../common/services/notification.service';
+import { SectionService } from '../common/services/section.service';
 
 @Component({
   selector: 'app-section',
@@ -44,7 +45,8 @@ export class SectionComponent implements OnInit {
 
   sectionsDataSource = new MatTableDataSource<Section>();
 
-  classSectionService = inject(SchoolClassSectionService);
+  sectionService = inject(SectionService);
+  schoolClassService = inject(SchoolClassService);
   employeeService = inject(EmployeeService);
   snackbar = inject(MatSnackBar);
   notificationService = inject(NotificationService);
@@ -80,7 +82,7 @@ export class SectionComponent implements OnInit {
       this.teachers = teachers;
     });
 
-    this.classSectionService.getClasses().then((classes) => {
+    this.schoolClassService.getClasses().then((classes) => {
       console.log(classes);
       this.classes = classes;
     });
@@ -118,7 +120,7 @@ export class SectionComponent implements OnInit {
       searchTerm: this.searchTerm
     };
 
-    this.classSectionService.getSections(pagination).then((sections: PageResponse<Section>) => {
+    this.sectionService.getSections(pagination).then((sections: PageResponse<Section>) => {
       this.sectionsDataSource.data = sections.content;
     });
   }
@@ -151,7 +153,7 @@ export class SectionComponent implements OnInit {
     console.log(newSection);
 
     try {
-      const savedSection: Section = await this.classSectionService.saveSection(newSection);
+      const savedSection: Section = await this.sectionService.saveSection(newSection);
 
       if (savedSection) {
         console.log(this.sectionsDataSource.data);
@@ -205,7 +207,7 @@ export class SectionComponent implements OnInit {
     console.log(newSection);
 
     try {
-      const savedSection: Section = await this.classSectionService.updateSection(newSection);
+      const savedSection: Section = await this.sectionService.updateSection(newSection);
 
       if (savedSection) {
         console.log(this.sectionsDataSource.data);
@@ -230,7 +232,7 @@ export class SectionComponent implements OnInit {
 
   async deleteSection(row: Section, index: number) {
     try {
-      await this.classSectionService.deleteSection(row);
+      await this.sectionService.deleteSection(row);
 
       this.sectionsDataSource.data.splice(index, 1);
       this.sectionsDataSource.data = [...this.sectionsDataSource.data];

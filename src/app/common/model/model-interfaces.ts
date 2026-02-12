@@ -1,4 +1,5 @@
 import { Employee } from "./registration";
+import { SectionSubject, Subject } from "./subject";
 
 export interface SchoolClass {
   id?: number;
@@ -7,12 +8,17 @@ export interface SchoolClass {
   sections?: Section[];
 }
 
+export interface SectionId {
+  schoolClassId: number;
+  classTeacherId: number;
+}
 
 export interface Section {
-  id?: number;
+  id?: SectionId;
   name: string;
   schoolClass: SchoolClass; // class name
   classTeacher: Employee; // employee number and should be teacher
   schoolClassId?: number;
   classTeacherId?: number;
+  sectionSubjects?: SectionSubject[]
 }
