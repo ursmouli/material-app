@@ -54,7 +54,7 @@
             <mat-chip-listbox>
               <mat-chip *ngFor="let subject of getAssignedSubjects()"
                        [removable]="true"
-                       (removed)="removeSubject(subject.id!)"
+                       (removed)="removeSubject(subject!)"
                        class="assigned-chip">
                 {{ subject.subject?.name }} ({{ subject.subject?.code }})
                 <button matChipRemove>
@@ -76,7 +76,7 @@
                 <div class="subject-details">{{ subject.subject?.code }} • {{ subject.subject?.credits }} credits • {{ subject.subject?.department?.name }}</div>
                 <div class="subject-description">{{ subject.subject?.description }}</div>
               </div>
-              <button mat-icon-button color="warn" (click)="removeSubject(subject.id!)" class="remove-btn">
+              <button mat-icon-button color="warn" (click)="removeSubject(subject!)" class="remove-btn">
                 <mat-icon>remove</mat-icon>
               </button>
             </mat-list-item>

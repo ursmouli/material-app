@@ -35,7 +35,6 @@ import { SubjectService } from '../common/services/subject.service';
 export class AssignSubjectsComponent implements OnInit {
   sections: Section[] = [];
 
-  selectedSectionId: string = '';
   selectdSection: Section | null = null;
   availableSubjects: Subject[] = [];
 
@@ -75,34 +74,46 @@ export class AssignSubjectsComponent implements OnInit {
   assignSubject(subject: Subject) {
     if (!this.selectdSection) return;
 
-    // if (!this.sections.find(s => s.id === this.selectedSectionId)?.subjects) {
-    //   this.sections.find(s => s.id === this.selectedSectionId)!.subjects = [];
-    // }
+    // assign subject to selected section
+    console.log("assigning subject", subject);
+    
+    this.selectdSection!.sectionSubjects!.push({
+      subject: subject
+    });
 
-    // this.sections.find(s => s.id === this.selectedSectionId)!.subjects.push(subject);
-    // this.updateAvailableSubjects();
+    this.sectionService.assignSubjectToSection(this.selectdSection!).then(section => {
+      this.selectdSection = section;
+      this.updateAvailableSubjects();
+    });
 
-    // this.snackBar.open(`Subject "${subject.name}" assigned to class successfully!`, 'Close', {
-    //   duration: 3000,
-    //   horizontalPosition: 'center',
-    //   verticalPosition: 'top'
-    // });
+    this.showMessage(`Subject "${subject.name}" assigned to class successfully!`);
   }
 
-  removeSubject(subject: SectionSubjectId) {
-    // if (!this.selectedSectionId || !this.sections.find(s => s.id === this.selectedSectionId)?.subjects) return;
+  removeSubject(subject: SectionSubject) {
+    if (!this.selectdSection || !this.selectdSection.sectionSubjects) return;
 
-    // const index = this.sections.find(s => s.id === this.selectedSectionId)!.subjects!.findIndex(s => s.id === subject.id);
-    // if (index > -1) {
-    //   this.sections.find(s => s.id === this.selectedSectionId)!.subjects!.splice(index, 1);
-    //   this.updateAvailableSubjects();
+    const index = this.selectdSection.sectionSubjects.findIndex(s => s.subject?.id === subject.subject?.id);
+    if (index > -1) {
+      console.log("removing subject", subject);
 
-    //   this.snackBar.open(`Subject "${subject.name}" removed from class successfully!`, 'Close', {
-    //     duration: 3000,
-    //     horizontalPosition: 'center',
-    //     verticalPosition: 'top'
-    //   });
-    // }
+      this.sectionService.removeSubjectFromSection(this.selectdSection?.schoolClass.id!, this.selectdSection?.classTeacher.id!, subject.subject!.id!).then(() => {
+        this.selectdSection!.sectionSubjects!.splice(index, 1);
+
+        this.availableSubjects.push(subject.subject!);
+        this.updateAvailableSubjects();
+      });
+
+
+      this.showMessage(`Subject "${subject.subject?.name}" removed from class successfully!`);
+    }
+  }
+
+  private showMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
   }
 
   getAssignedSubjects(): SectionSubject[] {

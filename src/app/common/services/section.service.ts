@@ -6,6 +6,7 @@ import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { SchoolClass, Section } from "../model/model-interfaces";
 import { PageResponse, Pagination } from "../model/pagination";
+import { SectionSubject } from "../model/subject";
 
 
 
@@ -35,5 +36,13 @@ export class SectionService {
 
   async updateSection(section: Section): Promise<Section> {
     return firstValueFrom(this.http.post<Section>(`${this.apiUrl}/sections/update`, section));
+  }
+
+  async assignSubjectToSection(section: Section): Promise<Section> {
+    return firstValueFrom(this.http.post<Section>(`${this.apiUrl}/sections/add-section-subject`, section));
+  }
+
+  async removeSubjectFromSection(schoolClassId: number, classTeacherId: number, subjectId: number): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${this.apiUrl}/sections/remove-section-subject/${schoolClassId}/${classTeacherId}/${subjectId}`));
   }
 }
