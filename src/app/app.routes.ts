@@ -19,6 +19,10 @@ import { DepartmentComponent } from './department/department.component';
 import { SectionComponent } from './section/section.component';
 import { TestComponent } from './test/test.component';
 import { EmployeeDepartmentComponent } from './employee-department/employee-department.component';
+import { VehicleComponent } from './vehicle/vehicle.component';
+import { RouteComponent } from './route/route.component';
+import { PickupPointComponent } from './pickup-point/pickup-point.component';
+import { AssignRouteComponent } from './assign-route/assign-route.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponent },
@@ -58,6 +62,12 @@ export const routes: Routes = [
             /* Classes & Sections */
             { path: 'classes', component: NewClassComponent },
             { path: 'sections', component: SectionComponent },
+
+            /* Transportation */
+            { path: 'routes', component: RouteComponent },
+            { path: 'vehicles', component: VehicleComponent },
+            { path: 'stops', component: PickupPointComponent },
+            { path: 'assign-route', component: AssignRouteComponent }
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },

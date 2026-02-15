@@ -1,0 +1,67 @@
+<div class="vehicle-container">
+  <h2>Vehicle Management</h2>
+
+  <div class="search-section">
+    <div class="search-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput type="text" placeholder="Search vehicles...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button mat-raised-button color="primary">Add Vehicle</button>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="vehicleDataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="registrationNumber">
+        <th mat-header-cell *matHeaderCellDef> Registration Number </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.registrationNumber}} </td>
+      </ng-container>
+      <ng-container matColumnDef="capacity">
+        <th mat-header-cell *matHeaderCellDef> Capacity </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.capacity}} </td>
+      </ng-container>
+      <ng-container matColumnDef="driverName">
+        <th mat-header-cell *matHeaderCellDef> Driver Name </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.driverName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="driverContact">
+        <th mat-header-cell *matHeaderCellDef> Driver Contact </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.driverContact}} </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.status}} </td>
+      </ng-container>
+      <ng-container matColumnDef="make">
+        <th mat-header-cell *matHeaderCellDef> Make/Model/Year </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.make}}/{{vehicle.model}}/{{vehicle.year}} </td>
+      </ng-container>
+      <ng-container matColumnDef="drivingLicense">
+        <th mat-header-cell *matHeaderCellDef> Driving License </th>
+        <td mat-cell *matCellDef="let vehicle"> {{vehicle.drivingLicense}} </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let vehicle"> 
+          <button mat-icon-button color="info">
+            <mat-icon>list_alt</mat-icon>
+          </button>
+          <button mat-icon-button color="primary">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div>
