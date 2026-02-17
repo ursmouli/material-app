@@ -12,7 +12,7 @@
   </div>
 
   <div class="action-bar">
-    <button mat-raised-button color="primary">Add Vehicle</button>
+    <button mat-raised-button color="primary" (click)="onAddVehicle()">Add Vehicle</button>
   </div>
 
   <div class="table-container">
@@ -51,7 +51,8 @@
           <button mat-icon-button color="info">
             <mat-icon>list_alt</mat-icon>
           </button>
-          <button mat-icon-button color="primary">
+          <!--vehicle/edit/:id-->
+          <button mat-icon-button color="primary" (click)="onEditVehicle(vehicle.id)">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button color="warn">

@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle',
@@ -23,6 +24,8 @@ import { MatIconModule } from '@angular/material/icon';
 export class VehicleComponent implements OnInit {
 
   vehicleService = inject(VehicleService);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
 
   vehicleDataSource = new MatTableDataSource<Vehicle>();
   displayedColumns: string[] = ['registrationNumber', 'capacity', 'driverName', 'driverContact', 'status', 'make', 'drivingLicense', 'actions'];
@@ -31,6 +34,14 @@ export class VehicleComponent implements OnInit {
     this.vehicleService.getVehicles().then(vehicles => {
       this.vehicleDataSource.data = vehicles;
     });
+  }
+
+  onEditVehicle(vehicleId: number) {
+    this.router.navigate(['/admin/vehicle/edit', vehicleId]);
+  }
+
+  onAddVehicle() {
+    this.router.navigate(['/admin/vehicle/add']);
   }
 
 }

@@ -28,10 +28,10 @@ declare global {
     MatCardModule,
     GoogleMapsModule
   ],
-  templateUrl: './route.component.html',
-  styleUrl: './route.component.scss'
+  templateUrl: './vehicle-route.component.html',
+  styleUrl: './vehicle-route.component.scss'
 })
-export class RouteComponent implements OnInit {
+export class VehicleRouteComponent implements OnInit {
 
   routeService = inject(RouteService);
   vehicleService = inject(VehicleService);
