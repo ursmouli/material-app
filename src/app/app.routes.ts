@@ -20,11 +20,11 @@ import { SectionComponent } from './section/section.component';
 import { TestComponent } from './test/test.component';
 import { EmployeeDepartmentComponent } from './employee-department/employee-department.component';
 import { VehicleComponent } from './vehicle/vehicle.component';
-import { VehicleRouteComponent } from './route/vehicle-route.component';
 import { PickupPointComponent } from './pickup-point/pickup-point.component';
 import { AssignRouteComponent } from './assign-route/assign-route.component';
-import { EditVehicleComponent } from './edit-vehicle/edit-vehicle.component';
+import { VehicleEditComponent } from './vehicle-edit/vehicle-edit.component';
 import { vehicleResolver } from './common/resolver/vehicle.resolver';
+import { VehicleRouteComponent } from './vehicle-route/vehicle-route.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponent },
@@ -70,8 +70,8 @@ export const routes: Routes = [
             { path: 'vehicles', component: VehicleComponent },
             { path: 'stops', component: PickupPointComponent },
             { path: 'assign-route', component: AssignRouteComponent },
-            { path: 'vehicle/edit/:id', component: EditVehicleComponent, resolve: { vehicleData: vehicleResolver } },
-            { path: 'vehicle/add', component: EditVehicleComponent }
+            { path: 'vehicle/edit/:id', component: VehicleEditComponent, resolve: { vehicleData: vehicleResolver } },
+            { path: 'vehicle/add', component: VehicleEditComponent }
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },

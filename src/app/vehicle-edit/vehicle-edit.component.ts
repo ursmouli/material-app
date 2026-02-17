@@ -1,16 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { VehicleService } from '../common/services/vehicle.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Vehicle } from '../common/model/transport-models';
-import { MatCardModule } from "@angular/material/card";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { ReactiveFormsModule } from "@angular/forms";
+
+
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Vehicle } from '../common/model/transport-models';
+import { VehicleService } from '../common/services/vehicle.service';
+
 
 @Component({
   selector: 'app-edit-vehicle',
@@ -25,10 +26,10 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     MatCardModule
   ],
-  templateUrl: './edit-vehicle.component.html',
-  styleUrl: './edit-vehicle.component.scss'
+  templateUrl: './vehicle-edit.component.html',
+  styleUrl: './vehicle-edit.component.scss'
 })
-export class EditVehicleComponent implements OnInit {
+export class VehicleEditComponent implements OnInit {
 
   isEditMode = false;
   vehicleForm: FormGroup;
@@ -44,7 +45,7 @@ export class EditVehicleComponent implements OnInit {
       registrationNumber: [''],
       capacity: [''],
       driverName: ['']
-    }); 
+    });
   }
 
   ngOnInit(): void {
@@ -57,7 +58,7 @@ export class EditVehicleComponent implements OnInit {
         registrationNumber: resolvedData.registrationNumber,
         capacity: resolvedData.capacity,
         driverName: resolvedData.driverName
-      })
+      });
       this.isEditMode = true;
     } else {
       this.isEditMode = false;
