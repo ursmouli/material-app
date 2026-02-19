@@ -13,7 +13,7 @@ export interface Vehicle {
   year?: number;
 }
 
-export interface Route {
+export interface VehicleRoute {
   id?: number;
   name: string;
   description?: string;
@@ -33,5 +33,5 @@ export interface PickupPoint {
   stopName: string;
   sequenceOrder: number;
   students?: Student[];
-  route?: Route;
+  route?: VehicleRoute;
 }

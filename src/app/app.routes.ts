@@ -25,6 +25,7 @@ import { AssignRouteComponent } from './assign-route/assign-route.component';
 import { VehicleEditComponent } from './vehicle-edit/vehicle-edit.component';
 import { vehicleResolver } from './common/resolver/vehicle.resolver';
 import { VehicleRouteComponent } from './vehicle-route/vehicle-route.component';
+import { VehicleRouteEditComponent } from './vehicle-route-edit/vehicle-route-edit.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponent },
@@ -67,6 +68,8 @@ export const routes: Routes = [
 
             /* Transportation */
             { path: 'routes', component: VehicleRouteComponent },
+            { path: 'routes/add', component: VehicleRouteEditComponent },
+            { path: 'routes/edit/:id', component: VehicleRouteEditComponent },
             { path: 'vehicles', component: VehicleComponent },
             { path: 'stops', component: PickupPointComponent },
             { path: 'assign-route', component: AssignRouteComponent },

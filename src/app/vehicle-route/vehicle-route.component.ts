@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
-import { RouteService } from '../common/services/route.service';
-import { Route } from '../common/model/transport-models';
+import { Component, inject, OnInit, AfterViewInit, signal, Inject } from '@angular/core';
+import { VehicleRouteService } from '../common/services/vehicle-route.service';
+import { VehicleRoute } from '../common/model/transport-models';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { VehicleService } from '../common/services/vehicle.service';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { Router } from '@angular/router';
 
 declare global {
   interface Window {
@@ -26,23 +27,25 @@ declare global {
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    GoogleMapsModule
+    GoogleMapsModule,
   ],
   templateUrl: './vehicle-route.component.html',
   styleUrl: './vehicle-route.component.scss'
 })
 export class VehicleRouteComponent implements OnInit {
 
-  routeService = inject(RouteService);
+  routeService = inject(VehicleRouteService);
   vehicleService = inject(VehicleService);
 
-  routesDataSource = new MatTableDataSource<Route>();
+  routesDataSource = new MatTableDataSource<VehicleRoute>();
   displayedColumns: string[] = ['name', 'description', 'vehicle', 'actions'];
   
 
   // Use Signals for center and zoom
   center = signal<google.maps.LatLngLiteral>({ lat: 40.73, lng: -73.93 });
   zoom = signal(12);
+
+  router = inject(Router);
 
   // Map options
   options: google.maps.MapOptions = {
@@ -68,6 +71,10 @@ export class VehicleRouteComponent implements OnInit {
     if (event.latLng) {
       this.center.set(event.latLng.toJSON());
     }
+  }
+  
+  addRoute() {
+    this.router.navigate(['/admin/routes/add']);
   }
 
 }
