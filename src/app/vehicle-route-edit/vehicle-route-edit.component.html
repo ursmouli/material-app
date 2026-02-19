@@ -2,12 +2,15 @@
   <mat-card>
     <mat-card-header>
       @if (isEditMode) {
-        <mat-card-title>Edit Vehicle Route</mat-card-title>
+      <mat-card-title>Edit Vehicle Route</mat-card-title>
       } @else {
-        <mat-card-title>Create Vehicle Route</mat-card-title>
+      <mat-card-title>Create Vehicle Route</mat-card-title>
       }
     </mat-card-header>
     <mat-card-content>
+      @if (!vehicles || vehicles.length === 0) {
+      <p>No vehicles available. Please add a vehicle first. </p><button mat-button routerLink="/admin/vehicles/add">Add Vehicle</button>
+      } @else {
       <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
           <input type="hidden" formControlName="id">
@@ -35,7 +38,11 @@
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Vehicle</mat-label>
-            <input matInput formControlName="vehicleId">
+            <mat-select formControlName="vehicleId">
+              @for (vehicle of vehicles; track vehicle.id) {
+              <mat-option [value]="vehicle.id">{{ vehicle.registrationNumber }}</mat-option>
+              }
+            </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Point A</mat-label>
@@ -67,10 +74,11 @@
           </mat-form-field>
         </div>
         <div class="form-row">
-          <button mat-raised-button color="primary" type="submit">Save</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="routeForm.invalid">Save</button>
           <button mat-button type="button" (click)="onCancel()">Cancel</button>
         </div>
       </form>
-    </mat-card-content> 
+      }
+    </mat-card-content>
   </mat-card>
 </div>

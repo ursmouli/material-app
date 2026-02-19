@@ -67,14 +67,14 @@ export const routes: Routes = [
             { path: 'sections', component: SectionComponent },
 
             /* Transportation */
+            { path: 'vehicles', component: VehicleComponent },
+            { path: 'vehicle/add', component: VehicleEditComponent },
+            { path: 'vehicle/edit/:id', component: VehicleEditComponent, resolve: { vehicleData: vehicleResolver } },
             { path: 'routes', component: VehicleRouteComponent },
             { path: 'routes/add', component: VehicleRouteEditComponent },
             { path: 'routes/edit/:id', component: VehicleRouteEditComponent },
-            { path: 'vehicles', component: VehicleComponent },
             { path: 'stops', component: PickupPointComponent },
             { path: 'assign-route', component: AssignRouteComponent },
-            { path: 'vehicle/edit/:id', component: VehicleEditComponent, resolve: { vehicleData: vehicleResolver } },
-            { path: 'vehicle/add', component: VehicleEditComponent }
         ] 
     },
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },

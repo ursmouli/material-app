@@ -17,10 +17,14 @@ export class VehicleRouteService {
   }
 
   async getRouteById(id: number): Promise<VehicleRoute> {
-    return firstValueFrom(this.http.get<VehicleRoute>(`${this.apiUrl}/route/${id}`));
+    return firstValueFrom(this.http.get<VehicleRoute>(`${this.apiUrl}/route/find/${id}`));
   }
 
   async addRoute(route: VehicleRoute): Promise<VehicleRoute> {
-    return firstValueFrom(this.http.post<VehicleRoute>(`${this.apiUrl}/route`, route));
+    return firstValueFrom(this.http.post<VehicleRoute>(`${this.apiUrl}/route/add`, route));
+  }
+
+  async updateRoute(id: number, route: VehicleRoute): Promise<VehicleRoute> {
+    return firstValueFrom(this.http.put<VehicleRoute>(`${this.apiUrl}/route/update/${id}`, route));
   }
 }

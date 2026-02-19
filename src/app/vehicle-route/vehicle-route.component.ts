@@ -60,6 +60,14 @@ export class VehicleRouteComponent implements OnInit {
     });
   }
 
+  addRoute() {
+    this.router.navigate(['/admin/routes/add']);
+  }
+
+  editVehicleRoute(id: number): void {
+    this.router.navigate(['/admin/routes/edit', id]);
+  }
+
   viewMap() {
     this.center.set({ lat: 3.101442198695739, lng: 101.67614379533345 });
     this.zoom.set(15);
@@ -73,8 +81,6 @@ export class VehicleRouteComponent implements OnInit {
     }
   }
   
-  addRoute() {
-    this.router.navigate(['/admin/routes/add']);
-  }
+  
 
 }
