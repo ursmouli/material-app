@@ -23,4 +23,12 @@ export class PickupPointService {
   async addStop(stop: PickupPoint): Promise<PickupPoint> {
     return firstValueFrom(this.http.post<PickupPoint>(`${this.apiUrl}/pickup-point/add`, stop));
   }
+
+  async updateStop(stop: PickupPoint): Promise<PickupPoint> {
+    return firstValueFrom(this.http.put<PickupPoint>(`${this.apiUrl}/pickup-point/update/${stop.id}`, stop));
+  }
+
+  async findByRoute(routeId: number): Promise<PickupPoint[]> {
+    return firstValueFrom(this.http.get<PickupPoint[]>(`${this.apiUrl}/pickup-point/find/route/${routeId}`));
+  }
 }

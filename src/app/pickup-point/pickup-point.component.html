@@ -1,1 +1,133 @@
-<p>pickup-point works!</p>
+<div class="pickup-point-container">
+  <h2>Pickup Point Management</h2>
+  <div class="search-section">
+    <div class="search-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (input)="searchPickupPoints()" placeholder="Search" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="action-bar">
+    <mat-form-field>
+      <mat-label>Select Route</mat-label>
+      <mat-select (selectionChange)="onRouteChange($event)">
+        <mat-option *ngFor="let route of vehicleRoutes" [value]="route.id">
+          {{route.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="addNewPickupPoint()" [disabled]="!selectedRouteId">Add Pickup Point</button>
+  </div>
+
+  <div class="table-container">
+    @if (pickupPointsDataSource.data.length > 0) {
+    <form [formGroup]="pickupPointForm">
+      <table mat-table [dataSource]="pickupPointsDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="stopName">
+          <th mat-header-cell *matHeaderCellDef>Stop Name</th>
+          <td mat-cell *matCellDef="let pickupPoint; let i = index">
+            <div *ngIf="!isEditingRow(i); else editStopName">
+              {{pickupPoint.stopName}}
+            </div>
+            <ng-template #editStopName>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Stop Name</mat-label>
+                <input matInput formControlName="stopName" />
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sequenceOrder">
+          <th mat-header-cell *matHeaderCellDef>Sequence</th>
+          <td mat-cell *matCellDef="let pickupPoint; let i = index">
+            <div *ngIf="!isEditingRow(i); else editSequence">
+              {{pickupPoint.sequenceOrder}}
+            </div>
+            <ng-template #editSequence>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Sequence</mat-label>
+                <input matInput formControlName="sequenceOrder" />
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let pickupPoint; let i = index">
+            <div *ngIf="!isEditingRow(i); else editAddress">
+              {{pickupPoint.address}}
+            </div>
+            <ng-template #editAddress>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Address</mat-label>
+                <input matInput formControlName="address" />
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="latitude">
+          <th mat-header-cell *matHeaderCellDef>Latitude</th>
+          <td mat-cell *matCellDef="let pickupPoint; let i = index">
+            <div *ngIf="!isEditingRow(i); else editLatitude">
+              {{pickupPoint.latitude}}
+            </div>
+            <ng-template #editLatitude>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Latitude</mat-label>
+                <input matInput formControlName="latitude" />
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="longitude">
+          <th mat-header-cell *matHeaderCellDef>Longitude</th>
+          <td mat-cell *matCellDef="let pickupPoint; let i = index">
+            <div *ngIf="!isEditingRow(i); else editLongitude">
+              {{pickupPoint.longitude}}
+            </div>
+            <ng-template #editLongitude>
+              <mat-form-field appearance="outline" class="inline-form-field">
+                <mat-label>Longitude</mat-label>
+                <input matInput formControlName="longitude" />
+              </mat-form-field>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let pickupPoint; let i = index">
+            <div *ngIf="!isEditingRow(i); else editingActions">
+              <button mat-icon-button (click)="editPickupPoint(pickupPoint, i)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="deletePickupPoint(pickupPoint, i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <ng-template #editingActions>
+              <button mat-icon-button (click)="isNewRow ? saveNewPickupPoint() : updatePickupPoint(pickupPoint, i)">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button (click)="cancelEditPickupPoint(i)">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" [class.editing-row]="isEditingRow(i)"></tr>
+      </table>
+    </form>
+    } @else {
+    <p>No pickup points found for the selected route.</p>
+    }
+  </div>
+
+</div>

@@ -34,4 +34,7 @@ export interface PickupPoint {
   sequenceOrder: number;
   students?: Student[];
   route?: VehicleRoute;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
 }
