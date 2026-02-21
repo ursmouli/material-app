@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { environment } from "@env/environment";
 import { firstValueFrom } from "rxjs";
 import { PickupPoint } from "../model/transport-models";
+import { MapResponse } from "../model/api-response";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,10 @@ export class PickupPointService {
 
   async updateStop(stop: PickupPoint): Promise<PickupPoint> {
     return firstValueFrom(this.http.put<PickupPoint>(`${this.apiUrl}/pickup-point/update/${stop.id}`, stop));
+  }
+
+  async delete(id: number): Promise<MapResponse> {
+    return firstValueFrom(this.http.delete<MapResponse>(`${this.apiUrl}/pickup-point/delete/${id}`));
   }
 
   async findByRoute(routeId: number): Promise<PickupPoint[]> {

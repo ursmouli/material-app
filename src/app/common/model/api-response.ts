@@ -1,0 +1,1 @@
+export type MapResponse = Record<string, string>;

@@ -12,6 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../common/services/notification.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { PickupPointEditDialogComponent } from '../pickup-point-edit-dialog/pickup-point-edit-dialog.component';
+import { AddLocationDialogComponent } from '../location/add-location-dialog/add-location-dialog.component';
+import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 
 @Component({
   selector: 'app-pickup-point',
@@ -25,14 +30,13 @@ import { NotificationService } from '../common/services/notification.service';
     MatIconModule,
     MatButtonModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule
 ],
   templateUrl: './pickup-point.component.html',
   styleUrl: './pickup-point.component.scss'
 })
 export class PickupPointComponent implements OnInit {
-
-  pickupPointForm: FormGroup;
   fb = inject(FormBuilder);
 
   searchTerm: string = '';
@@ -50,15 +54,10 @@ export class PickupPointComponent implements OnInit {
 
   pickupPointsDataSource = new MatTableDataSource<PickupPoint>();
   displayedColumns: string[] = ['stopName', 'sequenceOrder', 'address', 'latitude', 'longitude', 'actions'];
+
+  editDialog = inject(MatDialog);
   
   constructor() {
-    this.pickupPointForm = this.fb.group({
-      stopName: [''],
-      sequenceOrder: [0],
-      address: [''],
-      latitude: [0],
-      longitude: [0],
-    });
   }
 
   ngOnInit(): void {
@@ -82,92 +81,68 @@ export class PickupPointComponent implements OnInit {
     });
   }
 
-  isEditingRow(index: number): boolean {
-    return this.editingRow === index;
-  }
-
-  editPickupPoint(pickupPoint: PickupPoint, index: number) {
-    console.log('editPickupPoint', pickupPoint);
-    this.editingRow = index;
-  }
-
   deletePickupPoint(pickupPoint: PickupPoint, index: number) {
     console.log('deletePickupPoint', pickupPoint);
-    this.editingRow = null;
+    
+    
+    const dialogRef = this.editDialog.open(DeleteConfirmComponent, {
+      width: '400px',
+      data: {
+        message: `Are you sure you want to delete this pickup point '${pickupPoint.stopName}'?`
+      }
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.pickupPointService.delete(pickupPoint.id!).then((response) => {
+          this.notificationService.showNotification(response['message'], 'success');
+          this.pickupPointsDataSource.data = this.pickupPoints.filter(p => p.id !== pickupPoint.id);
+        });
+      }
+    });
   }
 
   addNewPickupPoint() {
-    console.log('addNewPickupPoint');
-    this.isNewRow = true;
-    this.editingRow = null;
-    this.pickupPointForm.reset();
-
-    const newPoint: Partial<PickupPoint> = {
-      stopName: '',
-      sequenceOrder: 0,
-      address: '',
-      latitude: 0,
-      longitude: 0,
-    };
+    const pickupPoint: PickupPoint | null = null;
     
-    this.pickupPointsDataSource.data = [newPoint as PickupPoint, ...this.pickupPointsDataSource.data];
-    this.editingRow = 0;
+    this.dialogOpen(pickupPoint, undefined);
   }
 
-  async saveNewPickupPoint() {
-    console.log('saveNewPickupPoint');
-    if (this.pickupPointForm.invalid) {
-      return;
-    }
+  dialogOpen(pickupPoint: PickupPoint | null, index: number | undefined) {
 
-    const newPickupPoint: PickupPoint = {
-      ...this.pickupPointForm.value,
-      route: { id: this.selectedRouteId } as VehicleRoute,
-    };
-    
-    // TODO: Save the new pickup point to the backend
-    console.log('Saving new pickup point:', newPickupPoint);
-
-    try {
-      const savedPickupPoint = await this.pickupPointService.addStop(newPickupPoint);
-      console.log('Saved pickup point:', savedPickupPoint);
-
-      if (savedPickupPoint) {
-        this.reset();
-
-        this.pickupPointsDataSource.data[0] = savedPickupPoint;
-        this.pickupPointsDataSource.data = [...this.pickupPointsDataSource.data];
-
-        this.notificationService.showNotification('Section saved successfully', 'success');
+    const existingStopNames = this.pickupPoints.map((stop) => stop.stopName);
+    const dialogRef = this.editDialog.open(PickupPointEditDialogComponent, {
+      width: '500px',
+      data: {
+        pickupPoint: pickupPoint,
+        vehicleRoute: this.vehicleRoutes.find(route => route.id === this.selectedRouteId),
+        existingStopNames: existingStopNames
       }
-    } catch (error) {
-      console.error('Error saving pickup point:', error);
-      this.notificationService.showNotification('Error saving section', 'error');
-    }
-  }
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('dialogRef.afterClosed', result);
+      console.log('index', index);
+      if (result) {
+        if (index !== undefined) {
+          this.pickupPointsDataSource.data[index] = result;
+          this.pickupPointsDataSource.data = [...this.pickupPointsDataSource.data];
 
-  reset() {
-    this.pickupPointForm.reset();
-    this.isNewRow = false;
-    this.editingRow = null;
+          const pickupPointIndex = this.pickupPoints.findIndex(p => p.id === pickupPoint!.id);
+          if (pickupPointIndex !== -1) {
+            this.pickupPoints[pickupPointIndex] = result;
+          }
+        } else {
+          this.pickupPointsDataSource.data = [result as PickupPoint, ...this.pickupPointsDataSource.data];
+        }
+      }
+    });
   }
 
   async updatePickupPoint(pickupPoint: PickupPoint, index: number) {
     console.log('updatePickupPoint', pickupPoint);
-    this.editingRow = index;
-    this.pickupPointForm.patchValue(pickupPoint);
-  }
-
-  cancelEditPickupPoint(index: number) {
-    console.log('cancelEditPickupPoint');
-
-    if (this.isNewRow) {
-      this.pickupPointsDataSource.data = this.pickupPointsDataSource.data.filter((_, i) => i !== index);
-      this.isNewRow = false;
-    }
-
-    this.editingRow = null;
-    this.pickupPointForm.reset();
+    
+    this.dialogOpen(pickupPoint, index);
   }
 
 }

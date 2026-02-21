@@ -16,7 +16,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule, 
     MatInputModule, 
     MatButtonModule, 
-    ReactiveFormsModule],
+    ReactiveFormsModule
+  ],
   templateUrl: './add-location-dialog.component.html',
   styleUrl: './add-location-dialog.component.scss'
 })

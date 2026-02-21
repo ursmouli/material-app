@@ -1,0 +1,36 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ isEdit ? 'Edit Pickup Point' : 'Add Pickup Point' }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="pickupPointForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Stop Name</mat-label>
+        <input matInput formControlName="stopName">
+        @if (pickupPointForm.get('stopName')?.hasError('duplicateStopName')) {
+          <mat-error>This stop name already exists</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Sequence Order</mat-label>
+        <input matInput type="number" formControlName="sequenceOrder">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Latitude</mat-label>
+        <input matInput type="number" formControlName="latitude">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Longitude</mat-label>
+        <input matInput type="number" formControlName="longitude">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="pickupPointForm.invalid">Save</button>
+  </mat-card-actions>
+</mat-card>
