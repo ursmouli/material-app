@@ -36,4 +36,8 @@ export class PickupPointService {
   async findByRoute(routeId: number): Promise<PickupPoint[]> {
     return firstValueFrom(this.http.get<PickupPoint[]>(`${this.apiUrl}/pickup-point/find/route/${routeId}`));
   }
+
+  async deleteAssignedStop(studentId: number, stopId: number): Promise<MapResponse> {
+    return firstValueFrom(this.http.delete<MapResponse>(`${this.apiUrl}/pickup-point/delete-assigned-stop/${studentId}/${stopId}`));
+  }
 }

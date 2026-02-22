@@ -25,4 +25,8 @@ export class StudentService {
   getStudents(pagination: Pagination): Promise<PageResponse<Student>> {
     return firstValueFrom(this.http.post<PageResponse<Student>>(`${this.apiUrl}/students/all`, pagination));
   }
+  
+  getAllStudents(): Promise<Student[]> {
+    return firstValueFrom(this.http.get<Student[]>(`${this.apiUrl}/students/all`));
+  }
 }

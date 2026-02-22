@@ -1,0 +1,63 @@
+.assign-route-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+}
+
+.fixed-width {
+  width: 300px;
+  margin-right: 20px;
+}
+
+.selection-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.search-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+
+  .search-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 200px;
+
+      .mat-mdc-form-field-flex {
+        min-height: 48px;
+      }
+    }
+  }
+}
+
+.form-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  gap: 10px;
+
+  button {
+    height: 56px; /* Matches the default height of many form fields */
+    line-height: 56px; /* Ensures the text stays centered vertically */
+    vertical-align: middle;
+  }
+}

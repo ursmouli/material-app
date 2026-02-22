@@ -26,6 +26,7 @@ export interface VehicleRoute {
   pointALongitude?: number,
   pointBLatitude?: number,
   pointBLongitude?: number,
+  pickupPoints?: PickupPoint[]
 }
 
 export interface PickupPoint {
@@ -37,4 +38,14 @@ export interface PickupPoint {
   address?: string;
   latitude?: number;
   longitude?: number;
+}
+
+export interface AssignedRoute {
+  routeName: string;
+  stopName: string;
+  studentName: string;
+  studentRollNumber: string;
+  student: Student;
+  route: VehicleRoute;
+  pickupPoint: PickupPoint;
 }

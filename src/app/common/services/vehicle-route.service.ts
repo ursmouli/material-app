@@ -27,4 +27,12 @@ export class VehicleRouteService {
   async updateRoute(id: number, route: VehicleRoute): Promise<VehicleRoute> {
     return firstValueFrom(this.http.put<VehicleRoute>(`${this.apiUrl}/route/update/${id}`, route));
   }
+  
+  async assignStudentRoute(studentId: number, stopId: number): Promise<void> {
+    return firstValueFrom(this.http.put<void>(`${this.apiUrl}/route/assign-student-route/${studentId}/${stopId}`, {}));
+  }
+
+  async getPickupPointStudents(routeId: number): Promise<VehicleRoute> {
+    return firstValueFrom(this.http.get<VehicleRoute>(`${this.apiUrl}/route/pickup-point-students/${routeId}`));
+  }
 }
