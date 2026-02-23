@@ -26,6 +26,7 @@ import { VehicleEditComponent } from './vehicle-edit/vehicle-edit.component';
 import { vehicleResolver } from './common/resolver/vehicle.resolver';
 import { VehicleRouteComponent } from './vehicle-route/vehicle-route.component';
 import { VehicleRouteEditComponent } from './vehicle-route-edit/vehicle-route-edit.component';
+import { TimetableComponent } from './timetable/timetable.component';
 
 export const routes: Routes = [
     { path: 'test', component: TestComponent },
@@ -65,6 +66,7 @@ export const routes: Routes = [
             /* Classes & Sections */
             { path: 'classes', component: NewClassComponent },
             { path: 'sections', component: SectionComponent },
+            { path: 'timetable', component: TimetableComponent },
 
             /* Transportation */
             { path: 'vehicles', component: VehicleComponent },

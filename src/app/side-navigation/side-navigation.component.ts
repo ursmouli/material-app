@@ -1,5 +1,5 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { HeaderComponent } from "../common/header/header.component";
 import { FooterComponent } from '../common/footer/footer.component';
@@ -19,16 +19,14 @@ import { FooterComponent } from '../common/footer/footer.component';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet, RouterLink, 
-    RouterLinkActive,
+    RouterOutlet, RouterLink,
     MatMenuModule, 
     MatToolbarModule, 
     MatButtonModule, 
     MatIconModule, 
     MatSidenavModule, 
     MatListModule, 
-    MatExpansionModule,
-    ProfileMenuComponent, 
+    MatExpansionModule, 
     HeaderComponent, 
     FooterComponent],
   templateUrl: './side-navigation.component.html',

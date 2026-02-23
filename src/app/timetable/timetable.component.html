@@ -1,0 +1,138 @@
+<div class="timetable-layout">
+  <!-- Left Panel for Add/Update Operations -->
+  <div class="control-panel">
+    <h3>Manage Timetable</h3>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Day</mat-label>
+      <mat-select [(ngModel)]="selectedDay">
+        <mat-option value="Monday">Monday</mat-option>
+        <mat-option value="Tuesday">Tuesday</mat-option>
+        <mat-option value="Wednesday">Wednesday</mat-option>
+        <mat-option value="Thursday">Thursday</mat-option>
+        <mat-option value="Friday">Friday</mat-option>
+        <mat-option value="Saturday">Saturday</mat-option>
+        <mat-option value="Sunday">Sunday</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Period</mat-label>
+      <mat-select [(ngModel)]="selectedPeriod">
+        <mat-option value="period1">Period 1 (8:00-8:45)</mat-option>
+        <mat-option value="period2">Period 2 (8:45-9:30)</mat-option>
+        <mat-option value="period3">Period 3 (9:30-10:15)</mat-option>
+        <mat-option value="period4">Period 4 (10:15-11:00)</mat-option>
+        <mat-option value="period5">Period 5 (11:00-11:45)</mat-option>
+        <mat-option value="period6">Period 6 (11:45-12:30)</mat-option>
+        <mat-option value="period7">Period 7 (12:30-1:15)</mat-option>
+        <mat-option value="period8">Period 8 (1:15-2:00)</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Subject Name</mat-label>
+      <input matInput [(ngModel)]="subjectName" placeholder="Enter subject name">
+    </mat-form-field>
+
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="updateCell()" class="full-width">
+        <mat-icon>edit</mat-icon>
+        Update Cell
+      </button>
+      <button mat-raised-button color="accent" (click)="clearCell()" class="full-width">
+        <mat-icon>clear</mat-icon>
+        Clear Cell
+      </button>
+    </div>
+
+    <div class="quick-add-section">
+      <h4>Quick Add Common Subjects</h4>
+      <div class="subject-chips">
+        <mat-chip-listbox aria-label="Common subjects">
+          <mat-chip-option (click)="setSubject('Mathematics')">Mathematics</mat-chip-option>
+          <mat-chip-option (click)="setSubject('Physics')">Physics</mat-chip-option>
+          <mat-chip-option (click)="setSubject('Chemistry')">Chemistry</mat-chip-option>
+          <mat-chip-option (click)="setSubject('English')">English</mat-chip-option>
+          <mat-chip-option (click)="setSubject('History')">History</mat-chip-option>
+          <mat-chip-option (click)="setSubject('Geography')">Geography</mat-chip-option>
+          <mat-chip-option (click)="setSubject('Biology')">Biology</mat-chip-option>
+          <mat-chip-option (click)="setSubject('Computer Science')">Computer Science</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Current Selection</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Day:</strong> {{selectedDay || 'Not selected'}}</p>
+          <p><strong>Period:</strong> {{selectedPeriod ? getPeriodDisplay(selectedPeriod) : 'Not selected'}}</p>
+          <p><strong>Current Subject:</strong> {{getCurrentSubject() || 'Empty'}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Timetable Container -->
+  <div class="timetable-container">
+    <h2>School Timetable</h2>
+    
+    <table mat-table [dataSource]="dataSource" class="timetable">
+      <!-- Day Column (Leftmost) -->
+      <ng-container matColumnDef="day">
+        <th mat-header-cell *matHeaderCellDef class="day-header">Day</th>
+        <td mat-cell *matCellDef="let element" class="day-cell">
+          <strong>{{element.day}}</strong>
+        </td>
+      </ng-container>
+
+      <!-- Period Columns -->
+      <ng-container matColumnDef="period1">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[0]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period1')">{{element.period1}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period2">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[1]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period2')">{{element.period2}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period3">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[2]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period3')">{{element.period3}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period4">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[3]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period4')">{{element.period4}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period5">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[4]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period5')">{{element.period5}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period6">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[5]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period6')">{{element.period6}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period7">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[6]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period7')">{{element.period7}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="period8">
+        <th mat-header-cell *matHeaderCellDef [innerHTML]="periodHeaders[7]"></th>
+        <td mat-cell *matCellDef="let element" class="subject-cell" (click)="selectCell(element.day, 'period8')">{{element.period8}}</td>
+      </ng-container>
+
+      <!-- Header and Data Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
