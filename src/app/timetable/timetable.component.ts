@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,11 +8,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
+import { TimetableService } from '../common/services/timetable.service';
+import { TimetableDayRow } from '../common/model/timetable';
+import { SubjectService } from '../common/services/subject.service';
+import { Subject } from '../common/model/subject';
+import { MatSelectChange } from '@angular/material/select';
+import { Section } from '../common/model/model-interfaces';
+import { CommonModule } from '@angular/common';
+import { SectionService } from '../common/services/section.service';
 
 @Component({
   selector: 'app-timetable',
   standalone: true,
   imports: [
+    CommonModule,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
@@ -27,47 +36,63 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './timetable.component.scss'
 })
 export class TimetableComponent {
-  displayedColumns = ['day', 'period1', 'period2', 'period3', 'period4', 'period5', 'period6', 'period7', 'period8'];
+  timetableService = inject(TimetableService);
+  subjectService = inject(SubjectService);
+  sectionService = inject(SectionService);
 
-  timeSlots = [
-    '8:00 AM - 8:45 AM',
-    '8:45 AM - 9:30 AM',
-    '9:30 AM - 10:15 AM',
-    '10:15 AM - 11:00 AM',
-    '11:00 AM - 11:45 AM',
-    '11:45 AM - 12:30 PM',
-    '12:30 PM - 1:15 PM',
-    '1:15 PM - 2:00 PM',
-  ];
+  periods = [...Array.from({ length: 8 }, (_, i) => `${i + 1}`)];
+  days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  displayedColumns: string[] = ['day', ...Array.from({ length: 8 }, (_, i) => `${i + 1}`)];
 
-  periodHeaders = [
-    'Period 1<br>8:00-8:45',
-    'Period 2<br>8:45-9:30',
-    'Period 3<br>9:30-10:15',
-    'Period 4<br>10:15-11:00',
-    'Period 5<br>11:00-11:45',
-    'Period 6<br>11:45-12:30',
-    'Period 7<br>12:30-1:15',
-    'Period 8<br>1:15-2:00'
-  ];
+  // Sample data simulating your API response
+  timetableData: TimetableDayRow[] = [];
+  readonly totalPeriods = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  dataSource = new MatTableDataSource<any>();
+  
+  dataSource = new MatTableDataSource< TimetableDayRow>(); // Populate this from your API
 
   // Control panel properties
   selectedDay: string = '';
   selectedPeriod: string = '';
   subjectName: string = '';
 
+  subjects: Subject[] = [];
+  sections: Section[] = [];
+
+  selectedSection: Section | null = null;
+
   ngOnInit() {
-    this.dataSource.data = [
-      { day: 'Monday', period1: 'Mathematics', period2: 'Physics', period3: 'Chemistry', period4: 'English', period5: 'History', period6: 'Geography', period7: 'Biology', period8: 'Computer Science' },
-      { day: 'Tuesday', period1: 'Physics', period2: 'Mathematics', period3: 'English', period4: 'Chemistry', period5: 'Biology', period6: 'History', period7: 'Computer Science', period8: 'Geography' },
-      { day: 'Wednesday', period1: 'Chemistry', period2: 'English', period3: 'Mathematics', period4: 'Physics', period5: 'Computer Science', period6: 'Biology', period7: 'History', period8: 'Geography' },
-      { day: 'Thursday', period1: 'English', period2: 'Chemistry', period3: 'Physics', period4: 'Mathematics', period5: 'History', period6: 'Computer Science', period7: 'Geography', period8: 'Biology' },
-      { day: 'Friday', period1: 'Mathematics', period2: 'History', period3: 'Geography', period4: 'English', period5: 'Physics', period6: 'Chemistry', period7: 'Biology', period8: 'Computer Science' },
-      { day: 'Saturday', period1: 'Computer Science', period2: 'Biology', period3: 'History', period4: 'Geography', period5: 'Mathematics', period6: 'Physics', period7: 'English', period8: 'Chemistry' },
-      { day: 'Sunday', period1: '', period2: '', period3: '', period4: '', period5: '', period6: '', period7: '', period8: '' }
-    ];
+
+    this.sectionService.getAllSections().then(sections => {
+      console.log('Sections:', sections);
+      this.sections = sections;
+    });
+
+    this.subjectService.getSubjects().then(subjects => {
+      console.log('Subjects:', subjects);
+      this.subjects = subjects;
+    });
+
+    
+  }
+
+  onSectionChange(event: MatSelectChange): void {
+    this.selectedSection = event.value;
+    // Load timetable for the selected section
+    console.log('Selected section:', this.selectedSection);
+    this.loadTimetable();
+  }
+
+  loadTimetable(): void {
+    // TODO: Implement loading timetable for selected section
+    console.log('Loading timetable for section:', this.selectedSection);
+
+    if (this.selectedSection) {
+      this.timetableService.getTimetable(this.selectedSection.schoolClass.id!, this.selectedSection.classTeacher.id!).then(timetable => {
+        console.log('Timetable:', timetable);
+        this.dataSource.data = timetable;
+      });
+    }
   }
 
   // Control panel methods
@@ -83,9 +108,9 @@ export class TimetableComponent {
       return;
     }
 
-    const dayData = this.dataSource.data.find(item => item.day === this.selectedDay);
+    const dayData = this.dataSource.data.find(item => item.dayOfWeek === this.selectedDay);
     if (dayData) {
-      dayData[this.selectedPeriod] = this.subjectName;
+      // dayData[this.selectedPeriod] = this.subjectName;
       this.dataSource.data = [...this.dataSource.data]; // Refresh the table
     }
   }
@@ -96,9 +121,9 @@ export class TimetableComponent {
       return;
     }
 
-    const dayData = this.dataSource.data.find(item => item.day === this.selectedDay);
+    const dayData = this.dataSource.data.find(item => item.dayOfWeek === this.selectedDay);
     if (dayData) {
-      dayData[this.selectedPeriod] = '';
+      // dayData[this.selectedPeriod] = '';
       this.subjectName = '';
       this.dataSource.data = [...this.dataSource.data]; // Refresh the table
     }
@@ -113,8 +138,8 @@ export class TimetableComponent {
       return '';
     }
 
-    const dayData = this.dataSource.data.find(item => item.day === this.selectedDay);
-    return dayData ? dayData[this.selectedPeriod] : '';
+    const dayData = this.dataSource.data.find(item => item.dayOfWeek === this.selectedDay);
+    return dayData ? (dayData[this.selectedPeriod as keyof TimetableDayRow] as string) : '';
   }
 
   getPeriodDisplay(period: string): string {

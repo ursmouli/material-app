@@ -1,0 +1,278 @@
+[
+    {
+        "dayOfWeek": "SATURDAY",
+        "sectionName": "A",
+        "periods": {
+            "1": {
+                "subjectName": "Advanced Math",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "2": {
+                "subjectName": "Advanced Physics",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "3": {
+                "subjectName": "Seminar",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "4": {
+                "subjectName": "Seminar",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "5": {
+                "subjectName": "Career Guidance",
+                "teacherName": "Counselor",
+                "classroom": null
+            },
+            "6": {
+                "subjectName": "Project Work",
+                "teacherName": "N/A",
+                "classroom": null
+            },
+            "7": {
+                "subjectName": "Project Work",
+                "teacherName": "N/A",
+                "classroom": null
+            },
+            "8": {
+                "subjectName": "Weekly Review",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            }
+        }
+    },
+    {
+        "dayOfWeek": "MONDAY",
+        "sectionName": "A",
+        "periods": {
+            "1": {
+                "subjectName": "Mathematics",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "2": {
+                "subjectName": "Physics",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "3": {
+                "subjectName": "Chemistry",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "4": {
+                "subjectName": "Biology",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "5": {
+                "subjectName": "English",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "6": {
+                "subjectName": "History",
+                "teacherName": "Mr. Lee",
+                "classroom": null
+            },
+            "7": {
+                "subjectName": "Geography",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "8": {
+                "subjectName": "Physical Education",
+                "teacherName": "Coach Mike",
+                "classroom": null
+            }
+        }
+    },
+    {
+        "dayOfWeek": "FRIDAY",
+        "sectionName": "A",
+        "periods": {
+            "1": {
+                "subjectName": "English",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "2": {
+                "subjectName": "Biology",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "3": {
+                "subjectName": "Mathematics",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "4": {
+                "subjectName": "Chemistry",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "5": {
+                "subjectName": "Ethics",
+                "teacherName": "Ms. Elena",
+                "classroom": null
+            },
+            "6": {
+                "subjectName": "Literature",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "7": {
+                "subjectName": "Club Activities",
+                "teacherName": "Various",
+                "classroom": null
+            },
+            "8": {
+                "subjectName": "Club Activities",
+                "teacherName": "Various",
+                "classroom": null
+            }
+        }
+    },
+    {
+        "dayOfWeek": "THURSDAY",
+        "sectionName": "A",
+        "periods": {
+            "1": {
+                "subjectName": "Mathematics",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "2": {
+                "subjectName": "Mathematics",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "3": {
+                "subjectName": "English",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "4": {
+                "subjectName": "Chemistry",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "5": {
+                "subjectName": "Physics",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "6": {
+                "subjectName": "Social Studies",
+                "teacherName": "Mr. Lee",
+                "classroom": null
+            },
+            "7": {
+                "subjectName": "Physical Education",
+                "teacherName": "Coach Mike",
+                "classroom": null
+            },
+            "8": {
+                "subjectName": "Physical Education",
+                "teacherName": "Coach Mike",
+                "classroom": null
+            }
+        }
+    },
+    {
+        "dayOfWeek": "WEDNESDAY",
+        "sectionName": "A",
+        "periods": {
+            "1": {
+                "subjectName": "Biology",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "2": {
+                "subjectName": "English",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "3": {
+                "subjectName": "Mathematics",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "4": {
+                "subjectName": "Physics",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "5": {
+                "subjectName": "History",
+                "teacherName": "Mr. Lee",
+                "classroom": null
+            },
+            "6": {
+                "subjectName": "Geography",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "7": {
+                "subjectName": "Library",
+                "teacherName": "Librarian",
+                "classroom": null
+            },
+            "8": {
+                "subjectName": "Self Study",
+                "teacherName": "N/A",
+                "classroom": null
+            }
+        }
+    },
+    {
+        "dayOfWeek": "TUESDAY",
+        "sectionName": "A",
+        "periods": {
+            "1": {
+                "subjectName": "English",
+                "teacherName": "Ms. Sarah",
+                "classroom": null
+            },
+            "2": {
+                "subjectName": "Mathematics",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "3": {
+                "subjectName": "Physics",
+                "teacherName": "Prof. Julian",
+                "classroom": null
+            },
+            "4": {
+                "subjectName": "Chemistry",
+                "teacherName": "Dr. Aris",
+                "classroom": null
+            },
+            "5": {
+                "subjectName": "Computer Science",
+                "teacherName": "Mr. Chen",
+                "classroom": null
+            },
+            "6": {
+                "subjectName": "Computer Science",
+                "teacherName": "Mr. Chen",
+                "classroom": null
+            },
+            "7": {
+                "subjectName": "Art",
+                "teacherName": "Ms. Elena",
+                "classroom": null
+            },
+            "8": {
+                "subjectName": "Art",
+                "teacherName": "Ms. Elena",
+                "classroom": null
+            }
+        }
+    }
+]
